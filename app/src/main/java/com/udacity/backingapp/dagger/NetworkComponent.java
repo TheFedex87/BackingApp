@@ -1,6 +1,6 @@
 package com.udacity.backingapp.dagger;
 
-import com.udacity.backingapp.retrofit.RecepiesApiInterface;
+import com.udacity.backingapp.retrofit.RecipesApiInterface;
 
 import javax.inject.Singleton;
 
@@ -12,5 +12,5 @@ import dagger.Component;
 @Singleton
 @Component(modules = NetworkModule.class)
 public interface NetworkComponent {
-    RecepiesApiInterface getRecepiesApiInterface();
+    RecipesApiInterface getRecepiesApiInterface();
 }

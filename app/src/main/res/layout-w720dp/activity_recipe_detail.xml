@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.udacity.backingapp.ui.activities.RecipeDetail"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:id="@+id/recipe_steps_list_container"
+        android:layout_width="@dimen/steps_list_frame_width"
+        android:layout_height="match_parent" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:id="@+id/step_frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F00"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/recipe_step_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

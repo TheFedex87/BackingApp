@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.udacity.backingapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".application.BackingAppApplication"
         android:allowBackup="true"
@@ -10,15 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".ui.activities.RecipeDetail" />
+        <activity android:name=".ui.activities.RecipeStepDetail"></activity>
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="recipe_step_height">70dp</dimen>
+    <dimen name="recipe_step_margin">5dp</dimen>
+
+    <dimen name="steps_list_frame_width">400dp</dimen>
+
+    <dimen name="exo_player_height">350dp</dimen>
+</resources>

@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
-import com.udacity.backingapp.retrofit.RecepiesApiInterface;
+import com.udacity.backingapp.retrofit.RecipesApiInterface;
 
 import javax.inject.Singleton;
 
@@ -13,6 +13,7 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import timber.log.Timber;
 
 /**
  * Created by federico.creti on 23/03/2018.
@@ -24,8 +25,8 @@ public class NetworkModule {
 
     @Singleton
     @Provides
-    public RecepiesApiInterface provideRecepiesApiInterface(Retrofit retrofit){
-        return retrofit.create(RecepiesApiInterface.class);
+    public RecipesApiInterface provideRecepiesApiInterface(Retrofit retrofit){
+        return retrofit.create(RecipesApiInterface.class);
     }
 
     @Singleton
@@ -42,6 +43,7 @@ public class NetworkModule {
     public Gson provideGson(){
         return new GsonBuilder().create();
     }
+
 
     @Singleton
     @Provides
