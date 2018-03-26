@@ -38,6 +38,7 @@ public class RecipeStepsFragment extends Fragment  {
 
     private boolean singlePane;
 
+    @Inject
     public RecipeStepsFragment() {}
 
 

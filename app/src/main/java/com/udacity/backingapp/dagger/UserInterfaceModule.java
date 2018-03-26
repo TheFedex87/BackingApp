@@ -8,6 +8,7 @@ import com.udacity.backingapp.R;
 import com.udacity.backingapp.ui.adapters.IngredientsAdapter;
 import com.udacity.backingapp.ui.adapters.RecipesAdapter;
 import com.udacity.backingapp.ui.adapters.RecipesStepsAdapter;
+import com.udacity.backingapp.ui.fragments.RecipeStepsFragment;
 
 import javax.inject.Singleton;
 
@@ -63,4 +64,9 @@ public class UserInterfaceModule {
     }
 
 
+    @Singleton
+    @Provides
+    public RecipeStepsFragment provideRecipeStepsFragment(){
+        return new RecipeStepsFragment();
+    }
 }

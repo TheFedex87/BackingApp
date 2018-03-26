@@ -9,6 +9,8 @@ import android.os.Bundle;
 
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.application.BackingAppApplication;
+import com.udacity.backingapp.dagger.ApplicationModule;
+import com.udacity.backingapp.dagger.DaggerUserInterfaceComponent;
 import com.udacity.backingapp.model.Recipe;
 import com.udacity.backingapp.model.Step;
 import com.udacity.backingapp.ui.adapters.RecipesStepsAdapter;
@@ -25,6 +27,9 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
     private Recipe recipe;
 
     private boolean twoPaneMode;
+
+    @Inject
+    RecipeStepsFragment recipeSteps;
 
     @Inject
     Context context;
@@ -50,7 +55,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
                 recipeStepsDescription.add(step.getShortDescription());
             }
 
-            RecipeStepsFragment recipeSteps = new RecipeStepsFragment();
+            //recipeSteps = new RecipeStepsFragment();
+            //recipeSteps = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepsFragment();
             recipeSteps.setSteps(recipeStepsDescription);
             recipeSteps.setSinglePane(!twoPaneMode);
 

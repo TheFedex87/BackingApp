@@ -6,11 +6,41 @@
     android:id="@+id/step_frame_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.udacity.backingapp.ui.activities.RecipeStepDetail">
+    tools:context="com.udacity.backingapp.ui.activities.RecipeStepDetail"
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/recipe_step_detail_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="0dp"
+        android:layout_weight="8"></FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/step_navigator_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/previous_step"
+            android:layout_width="@dimen/steps_navigation_button_width"
+            android:layout_height="@dimen/steps_navigation_button_height"
+            android:background="@drawable/ic_previous_step"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_margin="5dp"/>
+
+        <Button
+            android:id="@+id/next_step"
+            android:layout_alignParentRight="true"
+            android:layout_width="@dimen/steps_navigation_button_width"
+            android:layout_height="@dimen/steps_navigation_button_height"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_next_step"
+            android:layout_margin="5dp"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import com.udacity.backingapp.ui.adapters.IngredientsAdapter;
 import com.udacity.backingapp.ui.adapters.RecipesStepsAdapter;
 import com.udacity.backingapp.ui.adapters.RecipesAdapter;
+import com.udacity.backingapp.ui.fragments.RecipeStepsFragment;
 
 import javax.inject.Singleton;
 
@@ -23,4 +24,6 @@ public interface UserInterfaceComponent {
 
     GridLayoutManager getGridLayoutManager();
     LinearLayoutManager getLinearLayoutManager();
+
+    RecipeStepsFragment getRecipeStepsFragment();
 }

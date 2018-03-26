@@ -2,6 +2,7 @@ package com.udacity.backingapp.dagger;
 
 import com.udacity.backingapp.ui.activities.MainActivity;
 import com.udacity.backingapp.ui.activities.RecipeDetail;
+import com.udacity.backingapp.ui.activities.RecipeStepDetail;
 import com.udacity.backingapp.ui.fragments.RecipeStepFragment;
 import com.udacity.backingapp.ui.fragments.RecipeStepsFragment;
 
@@ -19,4 +20,6 @@ public interface ApplicationComponent {
     void inject(RecipeDetail recipeDetail);
     void inject(RecipeStepsFragment recipeSteps);
     void inject(RecipeStepFragment recipeStep);
+
+    void inject(RecipeStepDetail recipeStepDetail);
 }
