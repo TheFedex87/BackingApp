@@ -5,6 +5,8 @@ import android.app.Application;
 import com.udacity.backingapp.dagger.ApplicationComponent;
 import com.udacity.backingapp.dagger.ApplicationModule;
 import com.udacity.backingapp.dagger.DaggerApplicationComponent;
+import com.udacity.backingapp.dagger.DaggerUserInterfaceComponent;
+import com.udacity.backingapp.dagger.UserInterfaceComponent;
 
 /**
  * Created by federico.creti on 23/03/2018.

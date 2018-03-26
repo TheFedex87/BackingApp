@@ -9,12 +9,10 @@ import android.os.Bundle;
 
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.application.BackingAppApplication;
-import com.udacity.backingapp.dagger.ApplicationModule;
-import com.udacity.backingapp.dagger.DaggerUserInterfaceComponent;
 import com.udacity.backingapp.model.Recipe;
 import com.udacity.backingapp.model.Step;
 import com.udacity.backingapp.ui.adapters.RecipesStepsAdapter;
-import com.udacity.backingapp.ui.fragments.RecipeStepFragment;
+import com.udacity.backingapp.ui.fragments.RecipeStepDescriptionFragment;
 import com.udacity.backingapp.ui.fragments.RecipeStepsFragment;
 
 import java.util.ArrayList;
@@ -28,8 +26,13 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
     private boolean twoPaneMode;
 
+    //This is the fragment which contains the list of all steps of a recipe
     @Inject
-    RecipeStepsFragment recipeSteps;
+    RecipeStepsFragment recipeStepsFragment;
+
+    //This is the fragment which contains the video player and step description
+    @Inject
+    RecipeStepDescriptionFragment recipeStepDescriptionFragment;
 
     @Inject
     Context context;
@@ -40,6 +43,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
         setContentView(R.layout.activity_recipe_detail);
 
         BackingAppApplication.appComponent().inject(this);
+
 
         if(findViewById(R.id.step_frame_container) != null) twoPaneMode = true;
 
@@ -55,14 +59,14 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
                 recipeStepsDescription.add(step.getShortDescription());
             }
 
-            //recipeSteps = new RecipeStepsFragment();
-            //recipeSteps = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepsFragment();
-            recipeSteps.setSteps(recipeStepsDescription);
-            recipeSteps.setSinglePane(!twoPaneMode);
+            //recipeStepsFragment = new RecipeStepsFragment();
+            //recipeStepsFragment = BackingAppApplication.userInterfaceComponent().getRecipeStepsFragment();
+            recipeStepsFragment.setSteps(recipeStepsDescription);
+            recipeStepsFragment.setSinglePane(!twoPaneMode);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .add(R.id.recipe_steps_list_container, recipeSteps)
+                    .add(R.id.recipe_steps_list_container, recipeStepsFragment)
                     .commit();
         }
     }
@@ -72,26 +76,24 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
         if (!twoPaneMode) {
             Intent intent = new Intent(this, RecipeStepDetail.class);
 
-            if (position == 0) {
-                intent.putParcelableArrayListExtra("step", new ArrayList(recipe.getIngredients()));
-            } else {
-                intent.putExtra("step", recipe.getSteps().get(position - 1));
-            }
+            intent.putParcelableArrayListExtra("ingredients", new ArrayList(recipe.getIngredients()));
+            intent.putParcelableArrayListExtra("steps", new ArrayList(recipe.getSteps()));
+            intent.putExtra("stepIndex", position);
 
             startActivity(intent);
         } else {
             FragmentManager fragmentManager = getSupportFragmentManager();
 
-            RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
+            recipeStepDescriptionFragment = new RecipeStepDescriptionFragment();
 
             if (position == 0){
-                recipeStepFragment.setIngredients(recipe.getIngredients());
+                recipeStepDescriptionFragment.setIngredients(recipe.getIngredients());
             } else {
-                recipeStepFragment.setStep(recipe.getSteps().get(position - 1));
+                recipeStepDescriptionFragment.setStep(recipe.getSteps().get(position - 1));
             }
 
             fragmentManager.beginTransaction()
-                    .replace(R.id.recipe_step_detail_container, recipeStepFragment)
+                    .replace(R.id.recipe_step_detail_container, recipeStepDescriptionFragment)
                     .commit();
         }
     }

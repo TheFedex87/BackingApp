@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.application.BackingAppApplication;
 import com.udacity.backingapp.dagger.ApplicationModule;
+import com.udacity.backingapp.dagger.DaggerApplicationComponent;
 import com.udacity.backingapp.dagger.DaggerNetworkComponent;
 import com.udacity.backingapp.dagger.DaggerUserInterfaceComponent;
 import com.udacity.backingapp.dagger.UserInterfaceComponent;

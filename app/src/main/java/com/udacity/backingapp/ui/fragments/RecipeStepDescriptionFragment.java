@@ -22,6 +22,7 @@ import com.udacity.backingapp.ui.adapters.IngredientsAdapter;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,8 +31,8 @@ import butterknife.Optional;
 /**
  * Created by Federico on 24/03/2018.
  */
-
-public class RecipeStepFragment extends Fragment {
+@Singleton
+public class RecipeStepDescriptionFragment extends Fragment {
     private List<Ingredient> ingredients;
     private Step step;
 
@@ -42,15 +43,17 @@ public class RecipeStepFragment extends Fragment {
     @Nullable @BindView(R.id.step_description)
     TextView recipeStepDescription;
 
-    public RecipeStepFragment() {}
-
     @Inject
     Context context;
+
+    @Inject
+    public RecipeStepDescriptionFragment() {}
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        BackingAppApplication.appComponent().inject(this);
+        //BackingAppApplication.appComponent().inject(this);
 
         View rootView = null;
 

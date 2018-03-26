@@ -20,6 +20,7 @@ import com.udacity.backingapp.ui.adapters.RecipesStepsAdapter;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +29,7 @@ import butterknife.ButterKnife;
  * Created by Federico on 24/03/2018.
  */
 
+@Singleton
 public class RecipeStepsFragment extends Fragment  {
     @BindView(R.id.recipes_steps_container)
     RecyclerView recipeStepsContainer;
@@ -39,11 +41,10 @@ public class RecipeStepsFragment extends Fragment  {
     private boolean singlePane;
 
     @Inject
-    public RecipeStepsFragment() {}
-
+    Context context;
 
     @Inject
-    Context context;
+    public RecipeStepsFragment() {}
 
     @Override
     public void onAttach(Context context) {
@@ -60,7 +61,7 @@ public class RecipeStepsFragment extends Fragment  {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        BackingAppApplication.appComponent().inject(this);
+        //BackingAppApplication.appComponent().inject(this);
 
         View rootView = inflater.inflate(R.layout.recipe_steps_list, container, false);
 

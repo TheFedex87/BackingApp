@@ -1,21 +1,15 @@
 package com.udacity.backingapp.ui.activities;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.application.BackingAppApplication;
-import com.udacity.backingapp.dagger.ApplicationModule;
-import com.udacity.backingapp.dagger.DaggerUserInterfaceComponent;
 import com.udacity.backingapp.model.Ingredient;
 import com.udacity.backingapp.model.Step;
-import com.udacity.backingapp.ui.fragments.RecipeStepFragment;
-import com.udacity.backingapp.ui.fragments.RecipeStepsFragment;
+import com.udacity.backingapp.ui.fragments.RecipeStepDescriptionFragment;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,13 +18,15 @@ import timber.log.Timber;
 
 public class RecipeStepDetail extends AppCompatActivity {
     private List<Ingredient> ingredients;
-    private Step step;
+    private List<Step> stepsList;
+    private int stepIndex;
 
     @Inject
     Context context;
 
+    //This is the fragment which contains the video player and step description
     @Inject
-    RecipeStepsFragment recipeStepsFragment;
+    RecipeStepDescriptionFragment recipeStepFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,31 +36,30 @@ public class RecipeStepDetail extends AppCompatActivity {
 
         BackingAppApplication.appComponent().inject(this);
 
-        if (bundle.containsKey("step")){
+        //recipeStepsFragment = BackingAppApplication.userInterfaceComponent().getRecipeStepsFragment();
 
-            step = bundle.getParcelable("step");
+        if (bundle.containsKey("steps") && bundle.containsKey("ingredients")){
 
-            if (step== null)
-                ingredients = bundle.getParcelableArrayList("step");
+            stepsList = bundle.getParcelableArrayList("steps");
+            ingredients = bundle.getParcelableArrayList("ingredients");
+            stepIndex = bundle.getInt("stepIndex");
 
-
-            RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
-
-
-            if(ingredients != null){
+            if (stepIndex == 0)
                 recipeStepFragment.setIngredients(ingredients);
-            } else if(step != null){
-                recipeStepFragment.setStep(step);
-            }
+            else
+                recipeStepFragment.setStep(stepsList.get(stepIndex - 1));
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.recipe_step_detail_container, recipeStepFragment)
-                    .commit();
-
+            updateFragment();
         }
         else{
             Timber.e("No step provided");
             finish();
         }
+    }
+
+    private void updateFragment(){
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.recipe_step_detail_container, recipeStepFragment)
+                .commit();
     }
 }

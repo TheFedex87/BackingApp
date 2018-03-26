@@ -62,11 +62,4 @@ public class UserInterfaceModule {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         return linearLayoutManager;
     }
-
-
-    @Singleton
-    @Provides
-    public RecipeStepsFragment provideRecipeStepsFragment(){
-        return new RecipeStepsFragment();
-    }
 }
