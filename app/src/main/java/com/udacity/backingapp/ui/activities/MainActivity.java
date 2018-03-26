@@ -52,8 +52,7 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 recipe = response.body();
-                recipesAdapter.swapRecepiesList(recipe);
-                //DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipesAdapter().swapRecepiesList(recipes);
+                recipesAdapter.swapRecipesList(recipe);
             }
 
             @Override

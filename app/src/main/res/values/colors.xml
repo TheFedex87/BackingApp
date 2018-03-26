@@ -5,5 +5,5 @@
     <color name="colorPrimaryLight">#F8BBD0</color>
     <color name="colorAccent">#448AFF</color>
 
-    <color name="colorCardBackgorund">#F8BBD0</color>
+    <color name="colorCardBackground">#F8BBD0</color>
 </resources>

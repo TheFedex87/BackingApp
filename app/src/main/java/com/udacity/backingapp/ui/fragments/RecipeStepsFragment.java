@@ -30,11 +30,13 @@ import butterknife.ButterKnife;
 
 public class RecipeStepsFragment extends Fragment  {
     @BindView(R.id.recipes_steps_container)
-    RecyclerView recepyStepsContainer;
+    RecyclerView recipeStepsContainer;
 
     private List<String> stepsList;
 
     private RecipesStepsAdapter.RecipeStepClickListener recipeStepClickListener;
+
+    private boolean singlePane;
 
     public RecipeStepsFragment() {}
 
@@ -68,12 +70,13 @@ public class RecipeStepsFragment extends Fragment  {
                 .userInterfaceModule(new UserInterfaceModule(recipeStepClickListener))
                 .build();
 
-        RecipesStepsAdapter recepyStepsAdapter = daggerUserInterfaceComponent.getRecipeStepsAdapter();
-        recepyStepsContainer.setAdapter(recepyStepsAdapter);
-        recepyStepsContainer.setLayoutManager(daggerUserInterfaceComponent.getLinearLayoutManager());
+        RecipesStepsAdapter recipeStepsAdapter = daggerUserInterfaceComponent.getRecipeStepsAdapter();
+        recipeStepsAdapter.setHighLightSelected(!singlePane);
+        recipeStepsContainer.setAdapter(recipeStepsAdapter);
+        recipeStepsContainer.setLayoutManager(daggerUserInterfaceComponent.getLinearLayoutManager());
 
         if(stepsList != null){
-            recepyStepsAdapter.swapRecepySteps(stepsList);
+            recipeStepsAdapter.swapRecipeSteps(stepsList);
         }
 
         return rootView;
@@ -83,4 +86,6 @@ public class RecipeStepsFragment extends Fragment  {
     public void setSteps(List<String> stepsList){
         this.stepsList = stepsList;
     }
+
+    public void setSinglePane(boolean singlePane){ this.singlePane = singlePane; }
 }

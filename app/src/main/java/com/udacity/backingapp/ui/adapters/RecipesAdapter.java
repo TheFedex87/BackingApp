@@ -1,6 +1,7 @@
 package com.udacity.backingapp.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,19 +20,21 @@ import butterknife.ButterKnife;
  * Created by federico.creti on 23/03/2018.
  */
 
-public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecepiesViewHolder> {
+public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesViewHolder> {
 
     private List<Recipe> recipes;
     private Context context;
 
     private RecipeClickListener recipeClickListener;
 
+
+
     public RecipesAdapter(Context context, RecipeClickListener recipeClickListener){
         this.context = context;
         this.recipeClickListener = recipeClickListener;
     }
 
-    public void swapRecepiesList(List<Recipe> recipes){
+    public void swapRecipesList(List<Recipe> recipes){
         this.recipes = recipes;
         notifyDataSetChanged();
     }
@@ -41,18 +44,18 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.Recepies
     }
 
     @Override
-    public RecepiesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecipesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(R.layout.recipe_card, parent, false);
-        RecepiesViewHolder recepiesViewHolder = new RecepiesViewHolder(view);
-        return recepiesViewHolder;
+        RecipesViewHolder recipesViewHolder = new RecipesViewHolder(view);
+        return recipesViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecepiesViewHolder holder, int position) {
-        holder.bindRecepie(position);
+    public void onBindViewHolder(RecipesViewHolder holder, int position) {
+        holder.bindRecipes(position);
     }
 
     @Override
@@ -61,18 +64,19 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.Recepies
         return recipes.size();
     }
 
-    class RecepiesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class RecipesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.recepie_name) TextView recepieTitleTV;
 
-        public RecepiesViewHolder(View itemView) {
+
+        public RecipesViewHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 
-        public void bindRecepie(int position){
+        public void bindRecipes(int position){
             recepieTitleTV.setText(recipes.get(position).getName());
         }
 

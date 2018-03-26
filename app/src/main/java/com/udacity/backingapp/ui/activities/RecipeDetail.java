@@ -52,6 +52,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
             RecipeStepsFragment recipeSteps = new RecipeStepsFragment();
             recipeSteps.setSteps(recipeStepsDescription);
+            recipeSteps.setSinglePane(!twoPaneMode);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
@@ -64,7 +65,6 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
     public void onRecipeStepClick(int position) {
         if (!twoPaneMode) {
             Intent intent = new Intent(this, RecipeStepDetail.class);
-            Bundle bundle = new Bundle();
 
             if (position == 0) {
                 intent.putParcelableArrayListExtra("step", new ArrayList(recipe.getIngredients()));

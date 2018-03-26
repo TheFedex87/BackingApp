@@ -18,18 +18,22 @@ import butterknife.ButterKnife;
  * Created by Federico on 24/03/2018.
  */
 
-public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapter.RecepyStepsViewHolder> {
+public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapter.RecipeStepsViewHolder> {
     private Context context;
     private List<String> recepySteps;
 
     private RecipeStepClickListener recipeStepClickListener;
+
+    private int selectedPosition = RecyclerView.NO_POSITION;
+
+    private boolean highLightSelected = false;
 
     public RecipesStepsAdapter(Context context, RecipeStepClickListener recipeStepClickListener){
         this.context = context;
         this.recipeStepClickListener = recipeStepClickListener;
     }
 
-    public void swapRecepySteps(List<String> recepySteps){
+    public void swapRecipeSteps(List<String> recepySteps){
         this.recepySteps = recepySteps;
         this.recepySteps.add(0, context.getString(R.string.recepy_ingredients));
         notifyDataSetChanged();
@@ -39,19 +43,26 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
         void onRecipeStepClick(int position);
     }
 
+    public void setHighLightSelected(boolean highLightSelected) {
+        this.highLightSelected = highLightSelected;
+    }
+
     @Override
-    public RecepyStepsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecipeStepsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
         View view = layoutInflater.inflate(R.layout.recipe_step_button, parent, false);
 
-        return new RecepyStepsViewHolder(view);
+        return new RecipeStepsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecepyStepsViewHolder holder, int position) {
+    public void onBindViewHolder(RecipeStepsViewHolder holder, int position) {
         holder.bindStep(position);
+
+        if(highLightSelected)
+            holder.recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
     }
 
     @Override
@@ -60,11 +71,11 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
         return recepySteps.size();
     }
 
-    class RecepyStepsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class RecipeStepsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        @BindView(R.id.recipe_step_description) TextView recepyStepDescription;
+        @BindView(R.id.recipe_step_description) TextView recipeStepDescription;
 
-        public RecepyStepsViewHolder(View itemView) {
+        public RecipeStepsViewHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);
@@ -72,11 +83,17 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
         }
 
         public void bindStep(int position){
-            recepyStepDescription.setText(recepySteps.get(position));
+            recipeStepDescription.setText(recepySteps.get(position));
         }
 
         @Override
         public void onClick(View view) {
+            if (highLightSelected) {
+                notifyItemChanged(selectedPosition);
+                selectedPosition = getAdapterPosition();
+                notifyItemChanged(selectedPosition);
+            }
+
             recipeStepClickListener.onRecipeStepClick(getAdapterPosition());
         }
     }
