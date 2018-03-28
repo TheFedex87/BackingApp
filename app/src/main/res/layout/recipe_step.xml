@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:id="@+id/playerView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/exo_player_height"
-        android:background="@color/colorPrimaryLight"
-        android:layout_margin="5dp"/>
+        android:layout_height="@dimen/exo_player_height" />
 
     <TextView
         android:id="@+id/step_description"

@@ -35,13 +35,13 @@ public class UserInterfaceModule {
 
     @Singleton
     @Provides
-    public RecipesAdapter provideRecepiesAdapter(Context context){
+    public RecipesAdapter provideRecipesAdapter(Context context){
         return new RecipesAdapter(context, recipeClickListener);
     }
 
     @Singleton
     @Provides
-    public RecipesStepsAdapter provideRecepyStepsAdapter(Context context){
+    public RecipesStepsAdapter provideRecipeStepsAdapter(Context context){
         return new RecipesStepsAdapter(context, recipeStepClickListener);
     }
 

@@ -31,7 +31,7 @@ import butterknife.Optional;
 /**
  * Created by Federico on 24/03/2018.
  */
-@Singleton
+
 public class RecipeStepDescriptionFragment extends Fragment {
     private List<Ingredient> ingredients;
     private Step step;
@@ -48,7 +48,6 @@ public class RecipeStepDescriptionFragment extends Fragment {
 
     @Inject
     public RecipeStepDescriptionFragment() {}
-
 
     @Nullable
     @Override
