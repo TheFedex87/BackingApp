@@ -42,7 +42,6 @@ public class RecipeStepDetail extends AppCompatActivity {
     //This is the fragment which contains the video player and step descriptio
     @Inject RecipeStepDescriptionFragment recipeStepDescriptionFragment;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

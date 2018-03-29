@@ -83,8 +83,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
             startActivity(intent);
         } else {
             FragmentManager fragmentManager = getSupportFragmentManager();
-
-            recipeStepDescriptionFragment = new RecipeStepDescriptionFragment();
+            BackingAppApplication.appComponent().inject(this);
+            //recipeStepDescriptionFragment = new RecipeStepDescriptionFragment();
 
             if (position == 0){
                 recipeStepDescriptionFragment.setIngredients(recipe.getIngredients());

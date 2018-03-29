@@ -47,7 +47,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //ExoPlayer dependecies
-    compile 'com.google.android.exoplayer:exoplayer:r2.2.0'
+    compile 'com.google.android.exoplayer:exoplayer:r2.5.1'
 
     //Timber
     implementation 'com.jakewharton.timber:timber:4.6.1'
