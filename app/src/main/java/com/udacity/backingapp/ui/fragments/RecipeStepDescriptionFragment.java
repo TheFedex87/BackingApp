@@ -103,6 +103,7 @@ public class RecipeStepDescriptionFragment extends Fragment {
 
             ButterKnife.bind(this, rootView);
 
+
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
             DisplayMetrics metrics = new DisplayMetrics();
@@ -112,8 +113,10 @@ public class RecipeStepDescriptionFragment extends Fragment {
             int orientation = getResources().getConfiguration().orientation;
 
             if(orientation == 2){
-                simpleExoPlayerView.setLayoutParams(new LinearLayout.LayoutParams(width, height - 100));
+                simpleExoPlayerView.setLayoutParams(new LinearLayout.LayoutParams(width, height));
             }
+
+
 
             recipeStepDescription.setText(step.getDescription() + "dfwfwf sf f dfgf dfgrthgrhrh ryhr hryhryh " +
                     "ryhryhryhryehry h ryh reyh ryeh" +

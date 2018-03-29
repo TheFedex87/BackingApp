@@ -1,12 +1,16 @@
 package com.udacity.backingapp.ui.activities;
 
 import android.content.Context;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.support.v4.app.FragmentManager;
+import android.widget.LinearLayout;
 
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.application.BackingAppApplication;
@@ -88,7 +92,12 @@ public class RecipeStepDetail extends AppCompatActivity {
 
             stepsList = bundle.getParcelableArrayList("steps");
             ingredients = bundle.getParcelableArrayList("ingredients");
-            stepIndex = bundle.getInt("stepIndex");
+
+            if (savedInstanceState == null || !savedInstanceState.containsKey("passedStepIndex"))
+                stepIndex = bundle.getInt("stepIndex");
+            else{
+                stepIndex = savedInstanceState.getInt("passedStepIndex");
+            }
 
             if (stepIndex == 0) {
                 recipeStepDescriptionFragment.setIngredients(ingredients);
@@ -98,6 +107,17 @@ public class RecipeStepDetail extends AppCompatActivity {
                 if(stepIndex == stepsList.size()){
                     nextStep.setEnabled(false);
                 }
+            }
+
+
+
+            int orientation = getResources().getConfiguration().orientation;
+
+            if(orientation == 2){
+                ActionBar actionBar = getSupportActionBar();
+                actionBar.hide();
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
             }
 
             updateFragment();
@@ -115,5 +135,12 @@ public class RecipeStepDetail extends AppCompatActivity {
                 .replace(R.id.recipe_step_detail_container, recipeStepDescriptionFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt("passedStepIndex", stepIndex);
     }
 }

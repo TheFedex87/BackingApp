@@ -5,15 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-<LinearLayout
 
-    android:id="@+id/step_frame_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context="com.udacity.backingapp.ui.activities.RecipeStepDetail"
-    android:orientation="vertical">
-
-
+    <LinearLayout
+        android:id="@+id/step_frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.udacity.backingapp.ui.activities.RecipeStepDetail"
+        android:orientation="vertical">
 
         <FrameLayout
             android:id="@+id/recipe_step_detail_container"
