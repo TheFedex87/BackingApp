@@ -60,6 +60,7 @@ import butterknife.Optional;
 public class RecipeStepDescriptionFragment extends Fragment {
     private List<Ingredient> ingredients;
     private Step step;
+    private boolean enableFullScreenOnLandscape = false;
 
 
     @Nullable @BindView(R.id.ingredients_container)
@@ -71,6 +72,8 @@ public class RecipeStepDescriptionFragment extends Fragment {
     @Nullable @BindView(R.id.playerView)
     SimpleExoPlayerView simpleExoPlayerView;
 
+
+
     @Inject
     Context context;
 
@@ -80,6 +83,12 @@ public class RecipeStepDescriptionFragment extends Fragment {
     @Inject
     public RecipeStepDescriptionFragment() {}
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -87,10 +96,30 @@ public class RecipeStepDescriptionFragment extends Fragment {
 
         View rootView = null;
 
+        int width = 0;
+        int height = 0;
+        int orientation = 0;
+        if (enableFullScreenOnLandscape) {
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            DisplayMetrics metrics = new DisplayMetrics();
+            display.getMetrics(metrics);
+            width = metrics.widthPixels;
+            height = metrics.heightPixels;
+            orientation = getResources().getConfiguration().orientation;
+        }
+
+
+
+
         if(ingredients != null){
             rootView = inflater.inflate(R.layout.recipe_ingredients, container, false);
 
             ButterKnife.bind(this, rootView);
+
+            if(orientation == 2 && enableFullScreenOnLandscape) {
+                ingredientsContainer.setMinimumHeight(height);
+            }
 
             IngredientsAdapter ingredientsAdapter = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getIngredientsAdapter();
             ingredientsContainer.setAdapter(ingredientsAdapter);
@@ -103,20 +132,9 @@ public class RecipeStepDescriptionFragment extends Fragment {
 
             ButterKnife.bind(this, rootView);
 
-
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
-            DisplayMetrics metrics = new DisplayMetrics();
-            display.getMetrics(metrics);
-            int width = metrics.widthPixels;
-            int height = metrics.heightPixels;
-            int orientation = getResources().getConfiguration().orientation;
-
-            if(orientation == 2){
+            if(orientation == 2 && enableFullScreenOnLandscape){
                 simpleExoPlayerView.setLayoutParams(new LinearLayout.LayoutParams(width, height));
             }
-
-
 
             recipeStepDescription.setText(step.getDescription() + "dfwfwf sf f dfgf dfgrthgrhrh ryhr hryhryh " +
                     "ryhryhryhryehry h ryh reyh ryeh" +
@@ -135,11 +153,17 @@ public class RecipeStepDescriptionFragment extends Fragment {
                     "yhyhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh  yhkhgiuogh uieng jng jetknpengpeungupahg tugheuèghèehge9ghe9 hge0geoigjegeqè g" +
                     "eqgieqh gupeqth geqhgèeqhgeihgeqhgqhgehg eqègioh");
 
-            exoPlayerManager.initializePlayer(simpleExoPlayerView);
-            try {
-                exoPlayerManager.setMediaAndPlay(Uri.parse(step.getVideoURL()), getContext());
-            }catch(Exception ex){
-                //TODO: manage error
+            if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
+                exoPlayerManager.initializePlayer(simpleExoPlayerView);
+
+                try {
+                    exoPlayerManager.setMediaAndPlay(Uri.parse(step.getVideoURL()), getContext());
+                } catch (Exception ex) {
+                    //TODO: manage error
+                }
+            }
+            else{
+                simpleExoPlayerView.setVisibility(View.GONE);
             }
         }
 
@@ -160,6 +184,9 @@ public class RecipeStepDescriptionFragment extends Fragment {
         this.ingredients = ingredients;
     }
 
+    public void setEnableFullScreenOnLandscape(boolean enableFullScreenOnLandscape){
+        this.enableFullScreenOnLandscape = enableFullScreenOnLandscape;
+    }
 
     @Override
     public void onDestroy() {

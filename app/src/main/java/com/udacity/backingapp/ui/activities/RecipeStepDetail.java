@@ -99,6 +99,7 @@ public class RecipeStepDetail extends AppCompatActivity {
                 stepIndex = savedInstanceState.getInt("passedStepIndex");
             }
 
+
             if (stepIndex == 0) {
                 recipeStepDescriptionFragment.setIngredients(ingredients);
                 previusStep.setEnabled(false);
@@ -109,18 +110,15 @@ public class RecipeStepDetail extends AppCompatActivity {
                 }
             }
 
-
-
             int orientation = getResources().getConfiguration().orientation;
-
             if(orientation == 2){
                 ActionBar actionBar = getSupportActionBar();
                 actionBar.hide();
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
             }
 
-            updateFragment();
+            //if (savedInstanceState == null)
+                updateFragment();
         }
         else{
             Timber.e("No step provided");
@@ -129,11 +127,11 @@ public class RecipeStepDetail extends AppCompatActivity {
     }
 
     private void updateFragment(){
+        recipeStepDescriptionFragment.setEnableFullScreenOnLandscape(true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction
                 .replace(R.id.recipe_step_detail_container, recipeStepDescriptionFragment)
-                .addToBackStack(null)
                 .commit();
     }
 

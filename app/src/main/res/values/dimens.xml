@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="recipe_card_height">250dp</dimen>
+
     <dimen name="recipe_step_height">70dp</dimen>
     <dimen name="recipe_step_margin">5dp</dimen>
 
-    <dimen name="steps_list_frame_width">400dp</dimen>
+    <dimen name="steps_list_frame_width">300dp</dimen>
 
-    <dimen name="exo_player_height">350dp</dimen>
+    <dimen name="exo_player_height">275dp</dimen>
 
     <dimen name="steps_navigation_button_width">50dp</dimen>
     <dimen name="steps_navigation_button_height">50dp</dimen>

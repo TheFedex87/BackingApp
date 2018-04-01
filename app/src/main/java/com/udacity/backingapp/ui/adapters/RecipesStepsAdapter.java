@@ -35,7 +35,6 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
 
     public void swapRecipeSteps(List<String> recepySteps){
         this.recepySteps = recepySteps;
-        this.recepySteps.add(0, context.getString(R.string.recepy_ingredients));
         notifyDataSetChanged();
     }
 
@@ -45,6 +44,10 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
 
     public void setHighLightSelected(boolean highLightSelected) {
         this.highLightSelected = highLightSelected;
+    }
+
+    public void setSelectedPosition(int selectedPosition){
+        this.selectedPosition = selectedPosition;
     }
 
     @Override
@@ -84,13 +87,22 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
 
         public void bindStep(int position){
             recipeStepDescription.setText(recepySteps.get(position));
+            if(position == selectedPosition) {
+                if(highLightSelected) {
+                    recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
+                    recipeStepClickListener.onRecipeStepClick(getAdapterPosition());
+                }
+            }
         }
 
         @Override
         public void onClick(View view) {
             if (highLightSelected) {
+                //Remove background selected color from previous button
                 notifyItemChanged(selectedPosition);
+                //Save selected position
                 selectedPosition = getAdapterPosition();
+                //Apply background selected color to new selected position
                 notifyItemChanged(selectedPosition);
             }
 

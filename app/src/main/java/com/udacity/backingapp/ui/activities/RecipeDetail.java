@@ -26,6 +26,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
     private boolean twoPaneMode;
 
+    private int selectedStepsOnTwoPaneMode = -1;
+
     //This is the fragment which contains the list of all steps of a recipe
     @Inject
     RecipeStepsFragment recipeStepsFragment;
@@ -59,15 +61,20 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
                 recipeStepsDescription.add(step.getShortDescription());
             }
 
-            //recipeStepsFragment = new RecipeStepsFragment();
-            //recipeStepsFragment = BackingAppApplication.userInterfaceComponent().getRecipeStepsFragment();
-            recipeStepsFragment.setSteps(recipeStepsDescription);
-            recipeStepsFragment.setSinglePane(!twoPaneMode);
+            if (savedInstanceState == null) {
+                adaptStepsList(recipeStepsDescription);
+                recipeStepsFragment.setSteps(recipeStepsDescription);
+                recipeStepsFragment.setTwoPaneMode(twoPaneMode);
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .add(R.id.recipe_steps_list_container, recipeStepsFragment)
-                    .commit();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .add(R.id.recipe_steps_list_container, recipeStepsFragment, "STEPS_LIST_FRAGMENT")
+                        .commit();
+            } else if(twoPaneMode) {
+                selectedStepsOnTwoPaneMode = savedInstanceState.getInt("selectedStep");
+                recipeStepsFragment.setSelectedStep(selectedStepsOnTwoPaneMode);
+            }
+
         }
     }
 
@@ -82,9 +89,12 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
             startActivity(intent);
         } else {
+            selectedStepsOnTwoPaneMode = position;
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             BackingAppApplication.appComponent().inject(this);
             //recipeStepDescriptionFragment = new RecipeStepDescriptionFragment();
+            recipeStepDescriptionFragment.setEnableFullScreenOnLandscape(false);
 
             if (position == 0){
                 recipeStepDescriptionFragment.setIngredients(recipe.getIngredients());
@@ -96,5 +106,15 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
                     .replace(R.id.recipe_step_detail_container, recipeStepDescriptionFragment)
                     .commit();
         }
+    }
+
+    private void adaptStepsList(List<String> listToAdapt){
+        listToAdapt.add(0, context.getString(R.string.recepy_ingredients));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("selectedStep", selectedStepsOnTwoPaneMode);
     }
 }

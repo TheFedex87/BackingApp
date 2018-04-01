@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
+import com.udacity.backingapp.retrofit.GoogleImagesApiInterface;
 import com.udacity.backingapp.retrofit.RecipesApiInterface;
 
 import javax.inject.Singleton;
@@ -13,7 +14,6 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import timber.log.Timber;
 
 /**
  * Created by federico.creti on 23/03/2018.
@@ -21,12 +21,18 @@ import timber.log.Timber;
 
 @Module
 public class NetworkModule {
-    private final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
+    private final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net";
 
     @Singleton
     @Provides
     public RecipesApiInterface provideRecepiesApiInterface(Retrofit retrofit){
         return retrofit.create(RecipesApiInterface.class);
+    }
+
+    @Singleton
+    @Provides
+    public GoogleImagesApiInterface provideGoogleImagesApiInterface(Retrofit retrofit){
+        return retrofit.create(GoogleImagesApiInterface.class);
     }
 
     @Singleton

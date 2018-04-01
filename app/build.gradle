@@ -9,6 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "GOOGLE_SEARCH_API_KEY", GOOGLE_SEARCH_API_KEY)
     }
     buildTypes {
         release {

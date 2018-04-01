@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.udacity.backingapp.R;
-import com.udacity.backingapp.application.BackingAppApplication;
 import com.udacity.backingapp.dagger.ApplicationModule;
 import com.udacity.backingapp.dagger.DaggerUserInterfaceComponent;
 import com.udacity.backingapp.dagger.UserInterfaceComponent;
@@ -38,13 +37,22 @@ public class RecipeStepsFragment extends Fragment  {
 
     private RecipesStepsAdapter.RecipeStepClickListener recipeStepClickListener;
 
-    private boolean singlePane;
+    private boolean twoPaneMode;
+
+    private int selectedStep = -1;
 
     @Inject
     Context context;
 
     @Inject
     public RecipeStepsFragment() {}
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -73,12 +81,19 @@ public class RecipeStepsFragment extends Fragment  {
                 .build();
 
         RecipesStepsAdapter recipeStepsAdapter = daggerUserInterfaceComponent.getRecipeStepsAdapter();
-        recipeStepsAdapter.setHighLightSelected(!singlePane);
+        recipeStepsAdapter.setHighLightSelected(twoPaneMode);
+        recipeStepsAdapter.setSelectedPosition(selectedStep);
         recipeStepsContainer.setAdapter(recipeStepsAdapter);
         recipeStepsContainer.setLayoutManager(daggerUserInterfaceComponent.getLinearLayoutManager());
 
         if(stepsList != null){
             recipeStepsAdapter.swapRecipeSteps(stepsList);
+        }
+
+        if(twoPaneMode && selectedStep >= 0 && selectedStep < recipeStepsAdapter.getItemCount()){
+            RecyclerView.ViewHolder viewHolder = recipeStepsContainer.findViewHolderForAdapterPosition(selectedStep);
+            if (viewHolder != null)
+                viewHolder.itemView.performClick();
         }
 
         return rootView;
@@ -89,5 +104,9 @@ public class RecipeStepsFragment extends Fragment  {
         this.stepsList = stepsList;
     }
 
-    public void setSinglePane(boolean singlePane){ this.singlePane = singlePane; }
+    public void setTwoPaneMode(boolean twoPaneMode){ this.twoPaneMode = twoPaneMode; }
+
+    public void setSelectedStep(int selectedStep){
+        this.selectedStep = selectedStep;
+    }
 }

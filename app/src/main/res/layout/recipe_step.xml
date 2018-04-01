@@ -13,16 +13,17 @@
             android:id="@+id/playerView"
             android:focusable="true"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/exo_player_height" />
+            android:layout_height="@dimen/exo_player_height"
+            app:resize_mode="fill"/>
 
         <TextView
             android:id="@+id/step_description"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
-            android:textSize="18dp"
+            android:textSize="25dp"
             android:background="@color/colorPrimaryLight"
-            android:layout_margin="5dp"/>
+            android:layout_margin="10dp"/>
 
     </LinearLayout>
 </ScrollView>

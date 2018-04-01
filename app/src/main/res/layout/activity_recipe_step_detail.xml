@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.udacity.backingapp.ui.activities.RecipeStepDetail"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryLight">
 
     <FrameLayout
         android:id="@+id/recipe_step_detail_container"
