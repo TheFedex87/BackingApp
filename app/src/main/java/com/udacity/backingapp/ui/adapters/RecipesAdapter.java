@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Region;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,8 +129,12 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
                             @Override
                             public void onResponse(Call<GoogleImageRoot> call, Response<GoogleImageRoot> response) {
                                 GoogleImageRoot googleImageRoot = response.body();
-                                String imagePath = googleImageRoot.items.get(0).getLink();
-                                picassoLoader(googleImageRoot.items, imagePath, directory, recipeName);
+                                if (googleImageRoot != null && googleImageRoot.items != null) {
+                                    String imagePath = googleImageRoot.items.get(0).getLink();
+                                    picassoLoader(googleImageRoot.items, imagePath, directory, recipeName);
+                                }else{
+                                    Timber.d("Google API calls expired.");
+                                }
 
                             }
 
@@ -152,25 +157,33 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
                     .into(recipeImage, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
-                            final File myImageFile = new File(directory, recipeName); // Create image file
-                            Bitmap bitmap = ((BitmapDrawable)recipeImage.getDrawable()).getBitmap();
-                            FileOutputStream fos = null;
-                            try {
-                                myImageFile.getParentFile().mkdirs();
-                                fos = new FileOutputStream(myImageFile);
-                                fos.flush();
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } finally {
-                                try {
-                                    if (fos != null)
-                                        fos.close();
+                            new AsyncTask<Void, Void, Void>(){
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                @Override
+                                protected Void doInBackground(Void... voids) {
+                                    final File myImageFile = new File(directory, recipeName); // Create image file
+                                    Bitmap bitmap = ((BitmapDrawable)recipeImage.getDrawable()).getBitmap();
+                                    FileOutputStream fos = null;
+                                    try {
+                                        myImageFile.getParentFile().mkdirs();
+                                        fos = new FileOutputStream(myImageFile);
+                                        fos.flush();
+                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } finally {
+                                        try {
+                                            if (fos != null)
+                                                fos.close();
+
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    return null;
                                 }
-                            }
+                            }.execute();
+
                         }
 
                         @Override
