@@ -13,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -38,6 +40,7 @@ import com.google.android.exoplayer2.util.Util;
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.application.BackingAppApplication;
 import com.udacity.backingapp.dagger.ApplicationModule;
+import com.udacity.backingapp.dagger.DaggerNetworkComponent;
 import com.udacity.backingapp.dagger.DaggerUserInterfaceComponent;
 import com.udacity.backingapp.exoplayer.ExoPlayerManager;
 import com.udacity.backingapp.model.Ingredient;
@@ -72,7 +75,8 @@ public class RecipeStepDescriptionFragment extends Fragment {
     @Nullable @BindView(R.id.playerView)
     SimpleExoPlayerView simpleExoPlayerView;
 
-
+    @Nullable @BindView(R.id.recipe_step_image_container)
+    ImageView recipeStepImageContainer;
 
     @Inject
     Context context;
@@ -80,13 +84,18 @@ public class RecipeStepDescriptionFragment extends Fragment {
     @Inject
     ExoPlayerManager exoPlayerManager;
 
-    @Inject
     public RecipeStepDescriptionFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        BackingAppApplication.appComponent().inject(this);
+        super.onAttach(context);
     }
 
     @Nullable
@@ -110,15 +119,13 @@ public class RecipeStepDescriptionFragment extends Fragment {
         }
 
 
-
-
         if(ingredients != null){
             rootView = inflater.inflate(R.layout.recipe_ingredients, container, false);
 
             ButterKnife.bind(this, rootView);
 
             if(orientation == 2 && enableFullScreenOnLandscape) {
-                ingredientsContainer.setMinimumHeight(height);
+                ingredientsContainer.setMinimumHeight(height - 20 - (int) (context.getResources().getDimension(R.dimen.steps_navigation_button_height)));
             }
 
             IngredientsAdapter ingredientsAdapter = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getIngredientsAdapter();
@@ -132,8 +139,15 @@ public class RecipeStepDescriptionFragment extends Fragment {
 
             ButterKnife.bind(this, rootView);
 
-            if(orientation == 2 && enableFullScreenOnLandscape){
-                simpleExoPlayerView.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+            if(orientation == 2 && enableFullScreenOnLandscape) {
+                if ((step.getVideoURL() != null && !step.getVideoURL().isEmpty()) ||
+                        (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty() && step.getThumbnailURL().endsWith("mp4"))) {
+                    simpleExoPlayerView.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+                } else if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
+                    recipeStepImageContainer.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+                } else {
+                    recipeStepDescription.setMinimumHeight(height - 20 - (int) (context.getResources().getDimension(R.dimen.steps_navigation_button_height)));
+                }
             }
 
             recipeStepDescription.setText(step.getDescription() + "dfwfwf sf f dfgf dfgrthgrhrh ryhr hryhryh " +
@@ -153,17 +167,30 @@ public class RecipeStepDescriptionFragment extends Fragment {
                     "yhyhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh  yhkhgiuogh uieng jng jetknpengpeungupahg tugheuèghèehge9ghe9 hge0geoigjegeqè g" +
                     "eqgieqh gupeqth geqhgèeqhgeihgeqhgqhgehg eqègioh");
 
-            if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
+            if ((step.getVideoURL() != null && !step.getVideoURL().isEmpty()) ||
+                    (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty() && step.getThumbnailURL().endsWith("mp4"))) {
                 exoPlayerManager.initializePlayer(simpleExoPlayerView);
 
+                Uri mediaUri = null;
+                if (step.getVideoURL() != null && !step.getVideoURL().isEmpty())
+                    mediaUri = Uri.parse(step.getVideoURL());
+                else
+                    mediaUri = Uri.parse(step.getThumbnailURL());
+
                 try {
-                    exoPlayerManager.setMediaAndPlay(Uri.parse(step.getVideoURL()), getContext());
+                    exoPlayerManager.setMediaAndPlay(mediaUri, getContext());
                 } catch (Exception ex) {
                     //TODO: manage error
                 }
-            }
-            else{
+            } else{
                 simpleExoPlayerView.setVisibility(View.GONE);
+            }
+
+            if(step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty() && !step.getThumbnailURL().endsWith("mp4")){
+                DaggerNetworkComponent.builder().applicationModule(new ApplicationModule(context)).build()
+                        .getPicasso().load(Uri.parse(step.getThumbnailURL())).fit().into(recipeStepImageContainer);
+            } else{
+                recipeStepImageContainer.setVisibility(View.GONE);
             }
         }
 

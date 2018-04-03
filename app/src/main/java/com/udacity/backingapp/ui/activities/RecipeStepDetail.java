@@ -43,14 +43,16 @@ public class RecipeStepDetail extends AppCompatActivity {
     @Inject
     Context context;
 
-    //This is the fragment which contains the video player and step descriptio
-    @Inject RecipeStepDescriptionFragment recipeStepDescriptionFragment;
+    //This is the fragment which contains the video player and step description
+    private RecipeStepDescriptionFragment recipeStepDescriptionFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_detail);
         Bundle bundle = getIntent().getExtras();
+
+        recipeStepDescriptionFragment = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepFragment();
 
         final RecipeStepDetail recipeStepDetail = this;
         BackingAppApplication.appComponent().inject(recipeStepDetail);
@@ -62,7 +64,8 @@ public class RecipeStepDetail extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     //In order to get a new reference of RecipeStepDescriptionFragment (which I need to replace the fragment) I have to reinject this class
-                    BackingAppApplication.appComponent().inject(recipeStepDetail);
+                    //BackingAppApplication.appComponent().inject(recipeStepDetail);
+                    recipeStepDescriptionFragment = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepFragment();
                     stepIndex--;
                     nextStep.setEnabled(true);
                     if (stepIndex == 0){
@@ -79,7 +82,8 @@ public class RecipeStepDetail extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     //In order to get a new reference of RecipeStepDescriptionFragment (which I need to replace the fragment) I have to reinject this class
-                    BackingAppApplication.appComponent().inject(recipeStepDetail);
+                    //BackingAppApplication.appComponent().inject(recipeStepDetail);
+                    recipeStepDescriptionFragment = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepFragment();
                     stepIndex++;
                     previusStep.setEnabled(true);
                     if (stepIndex == stepsList.size()) {

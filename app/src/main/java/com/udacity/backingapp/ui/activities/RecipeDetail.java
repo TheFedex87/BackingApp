@@ -9,6 +9,9 @@ import android.os.Bundle;
 
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.application.BackingAppApplication;
+import com.udacity.backingapp.dagger.ApplicationModule;
+import com.udacity.backingapp.dagger.DaggerUserInterfaceComponent;
+import com.udacity.backingapp.dagger.UserInterfaceComponent;
 import com.udacity.backingapp.model.Recipe;
 import com.udacity.backingapp.model.Step;
 import com.udacity.backingapp.ui.adapters.RecipesStepsAdapter;
@@ -29,12 +32,14 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
     private int selectedStepsOnTwoPaneMode = -1;
 
     //This is the fragment which contains the list of all steps of a recipe
-    @Inject
-    RecipeStepsFragment recipeStepsFragment;
+    //@Inject
+    //RecipeStepsFragment recipeStepsFragment;
 
     //This is the fragment which contains the video player and step description
-    @Inject
-    RecipeStepDescriptionFragment recipeStepDescriptionFragment;
+    //@Inject
+    //private RecipeStepDescriptionFragment recipeStepDescriptionFragment;
+
+    private UserInterfaceComponent userInterfaceComponent;
 
     @Inject
     Context context;
@@ -46,6 +51,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
         BackingAppApplication.appComponent().inject(this);
 
+        userInterfaceComponent = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build();
 
         if(findViewById(R.id.step_frame_container) != null) twoPaneMode = true;
 
@@ -60,6 +66,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
             for(Step step : recipe.getSteps()){
                 recipeStepsDescription.add(step.getShortDescription());
             }
+
+            RecipeStepsFragment recipeStepsFragment = userInterfaceComponent.getRecipeStepsFragment();
 
             if (savedInstanceState == null) {
                 adaptStepsList(recipeStepsDescription);
@@ -92,8 +100,9 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
             selectedStepsOnTwoPaneMode = position;
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            BackingAppApplication.appComponent().inject(this);
-            //recipeStepDescriptionFragment = new RecipeStepDescriptionFragment();
+            //BackingAppApplication.appComponent().inject(this);
+            RecipeStepDescriptionFragment recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepFragment();
+
             recipeStepDescriptionFragment.setEnableFullScreenOnLandscape(false);
 
             if (position == 0){

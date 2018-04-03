@@ -8,6 +8,7 @@
     <dimen name="steps_list_frame_width">300dp</dimen>
 
     <dimen name="exo_player_height">275dp</dimen>
+    <dimen name="step_image_container_height">275dp</dimen>
 
     <dimen name="steps_navigation_button_width">50dp</dimen>
     <dimen name="steps_navigation_button_height">50dp</dimen>

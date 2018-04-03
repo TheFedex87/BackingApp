@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.udacity.backingapp.R;
+import com.udacity.backingapp.application.BackingAppApplication;
 import com.udacity.backingapp.dagger.ApplicationModule;
 import com.udacity.backingapp.dagger.DaggerUserInterfaceComponent;
 import com.udacity.backingapp.dagger.UserInterfaceComponent;
@@ -28,7 +29,6 @@ import butterknife.ButterKnife;
  * Created by Federico on 24/03/2018.
  */
 
-@Singleton
 public class RecipeStepsFragment extends Fragment  {
     @BindView(R.id.recipes_steps_container)
     RecyclerView recipeStepsContainer;
@@ -44,7 +44,6 @@ public class RecipeStepsFragment extends Fragment  {
     @Inject
     Context context;
 
-    @Inject
     public RecipeStepsFragment() {}
 
     @Override
@@ -56,8 +55,8 @@ public class RecipeStepsFragment extends Fragment  {
 
     @Override
     public void onAttach(Context context) {
+        BackingAppApplication.appComponent().inject(this);
         super.onAttach(context);
-
         try {
             recipeStepClickListener = (RecipesStepsAdapter.RecipeStepClickListener) context;
         } catch (ClassCastException e) {

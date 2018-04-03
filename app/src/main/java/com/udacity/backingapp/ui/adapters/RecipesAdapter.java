@@ -22,6 +22,7 @@ import com.udacity.backingapp.R;
 import com.udacity.backingapp.dagger.ApplicationModule;
 import com.udacity.backingapp.dagger.DaggerNetworkComponent;
 import com.udacity.backingapp.dagger.NetworkComponent;
+import com.udacity.backingapp.dagger.UserInterfaceComponent;
 import com.udacity.backingapp.model.Recipe;
 import com.udacity.backingapp.model.googleimagesearchmodels.GoogleImage;
 import com.udacity.backingapp.model.googleimagesearchmodels.GoogleImageRoot;
@@ -53,6 +54,8 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
     private RecipeClickListener recipeClickListener;
 
     private NetworkComponent networkComponent;
+
+    private UserInterfaceComponent userInterfaceComponent;
 
     public RecipesAdapter(Context context, RecipeClickListener recipeClickListener){
         this.context = context;
@@ -112,7 +115,14 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
             final String recipeName = recipes.get(position).getName();
             recipeTitleTV.setText(recipeName);
 
+            bindImage(recipeName);
+        }
 
+        public void onClick(View view) {
+            recipeClickListener.onRecipeClick(getAdapterPosition());
+        }
+
+        private void bindImage(final String recipeName){
             String apyKey = BuildConfig.GOOGLE_SEARCH_API_KEY;
 
             ContextWrapper cw = new ContextWrapper(context);
@@ -123,7 +133,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
                 networkComponent.getPicasso().load(myImageFile).fit().into(recipeImage);
             } else if(!apyKey.isEmpty()) {
                 networkComponent.getGoogleImagesApiInterface().googleImages("https://www.googleapis.com/customsearch/v1?&cx=001116670235643120820:acj_gjncnsa&searchType=image&safe=high&imgSize=large&exactTerms=dessert&fileType=jpg",
-                        recipes.get(position).getName(),
+                        recipeName,
                         apyKey)
                         .enqueue(new Callback<GoogleImageRoot>() {
                             @Override
@@ -146,10 +156,6 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
             }
         }
 
-        public void onClick(View view) {
-            recipeClickListener.onRecipeClick(getAdapterPosition());
-        }
-
 
         //Method used to load a image into the view using Picasso
         private void picassoLoader(final List<GoogleImage> imagesList, final String imageUrl, final File directory, final String recipeName){
@@ -157,6 +163,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
                     .into(recipeImage, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
+                            //After the image is loaded into the imageView, I save it into a file in order to avoid to reload it from internet every time
                             new AsyncTask<Void, Void, Void>(){
 
                                 @Override
@@ -194,60 +201,6 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
                                 picassoLoader(imagesList, imagesList.get(1).getLink(), directory, recipeName);
                         }
                     });
-        }
-
-
-        //Method used to store an image into the device, this allows us to not download the image every time
-        //Source: http://www.codexpedia.com/android/android-download-and-save-image-through-picasso/
-        private Target picassoImageTarget(Context context, final String imageDir, final String imageName, final ImageView targetImageView) {
-            ContextWrapper cw = new ContextWrapper(context);
-            final File directory = cw.getDir(imageDir, Context.MODE_PRIVATE); // path to /data/data/yourapp/app_imageDir
-
-            return new Target() {
-                @Override
-                public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-                    final File myImageFile = new File(directory, imageName); // Create image file
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            FileOutputStream fos = null;
-                            try {
-                                myImageFile.getParentFile().mkdirs();
-                                fos = new FileOutputStream(myImageFile);
-                                fos.flush();
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } finally {
-                                try {
-                                    if (fos != null)
-                                        fos.close();
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                        }
-                    });
-                    thread.start();
-                    try {
-                        thread.wait();
-                    } catch(Exception ex){
-
-                    }
-                    networkComponent.getPicasso().load(myImageFile).fit().into(targetImageView);
-                }
-
-                @Override
-                public void onBitmapFailed(Drawable errorDrawable) {
-                    Timber.e(String.format("DrawableError: {0}", imageName));
-                }
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-                    if (placeHolderDrawable != null) {}
-                }
-            };
         }
     }
 }

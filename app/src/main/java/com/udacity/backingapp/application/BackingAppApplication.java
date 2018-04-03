@@ -14,15 +14,18 @@ import com.udacity.backingapp.dagger.UserInterfaceComponent;
 
 public class BackingAppApplication extends Application {
     private static ApplicationComponent appComponent;
+    //private static UserInterfaceComponent userInterfaceComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         appComponent = DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this.getApplicationContext())).build();
+        //userInterfaceComponent = DaggerUserInterfaceComponent.builder().build();
     }
 
     public static ApplicationComponent appComponent(){
         return appComponent;
     }
+    //public static UserInterfaceComponent userInterfaceComponent() { return userInterfaceComponent; }
 }

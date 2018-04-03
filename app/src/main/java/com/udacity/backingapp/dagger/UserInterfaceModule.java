@@ -8,6 +8,7 @@ import com.udacity.backingapp.R;
 import com.udacity.backingapp.ui.adapters.IngredientsAdapter;
 import com.udacity.backingapp.ui.adapters.RecipesAdapter;
 import com.udacity.backingapp.ui.adapters.RecipesStepsAdapter;
+import com.udacity.backingapp.ui.fragments.RecipeStepDescriptionFragment;
 import com.udacity.backingapp.ui.fragments.RecipeStepsFragment;
 
 import javax.inject.Singleton;
@@ -61,5 +62,15 @@ public class UserInterfaceModule {
     public LinearLayoutManager provideLinearLayoutManager(Context context){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         return linearLayoutManager;
+    }
+
+    @Provides
+    public RecipeStepDescriptionFragment provideRecipeStepDescriptionFragment(){
+        return new RecipeStepDescriptionFragment();
+    }
+
+    @Provides
+    public RecipeStepsFragment provideRecipeStepsFragment(){
+        return new RecipeStepsFragment();
     }
 }
