@@ -150,22 +150,7 @@ public class RecipeStepDescriptionFragment extends Fragment {
                 }
             }
 
-            recipeStepDescription.setText(step.getDescription() + "dfwfwf sf f dfgf dfgrthgrhrh ryhr hryhryh " +
-                    "ryhryhryhryehry h ryh reyh ryeh" +
-                    "h " +
-                    "tyh " +
-                    "tyh" +
-                    "ryhyrhyhyhyhyrher" +
-                    "yhyh" +
-                    "yy" +
-                    "y" +
-                    "y" +
-                    "hy" +
-                    "hyhyhyhyhyh" +
-                    "y" +
-                    "h" +
-                    "yhyhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh  yhkhgiuogh uieng jng jetknpengpeungupahg tugheuèghèehge9ghe9 hge0geoigjegeqè g" +
-                    "eqgieqh gupeqth geqhgèeqhgeihgeqhgqhgehg eqègioh");
+            recipeStepDescription.setText(step.getDescription());
 
             if ((step.getVideoURL() != null && !step.getVideoURL().isEmpty()) ||
                     (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty() && step.getThumbnailURL().endsWith("mp4"))) {

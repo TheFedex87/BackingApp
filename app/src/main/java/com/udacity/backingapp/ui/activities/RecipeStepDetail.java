@@ -2,6 +2,7 @@ package com.udacity.backingapp.ui.activities;
 
 import android.content.Context;
 import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -11,6 +12,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.support.v4.app.FragmentManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.application.BackingAppApplication;
@@ -59,6 +62,8 @@ public class RecipeStepDetail extends AppCompatActivity {
 
         if (bundle.containsKey("steps") && bundle.containsKey("ingredients")){
             ButterKnife.bind(this);
+
+
 
             previusStep.setOnClickListener(new View.OnClickListener() {
                 @Override
