@@ -12,10 +12,12 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -65,6 +67,8 @@ public class RecipeStepDescriptionFragment extends Fragment {
     private Step step;
     private boolean enableFullScreenOnLandscape = false;
 
+    @Nullable @BindView(R.id.step_container)
+    ScrollView stepContainer;
 
     @Nullable @BindView(R.id.ingredients_container)
     RecyclerView ingredientsContainer;
@@ -118,7 +122,6 @@ public class RecipeStepDescriptionFragment extends Fragment {
             orientation = getResources().getConfiguration().orientation;
         }
 
-
         if(ingredients != null){
             rootView = inflater.inflate(R.layout.recipe_ingredients, container, false);
 
@@ -132,8 +135,6 @@ public class RecipeStepDescriptionFragment extends Fragment {
             ingredientsContainer.setAdapter(ingredientsAdapter);
             ingredientsContainer.setLayoutManager(DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getLinearLayoutManager());
             ingredientsAdapter.swapIngredients(ingredients);
-
-
         } else if(step != null){
             rootView = inflater.inflate(R.layout.recipe_step, container, false);
 

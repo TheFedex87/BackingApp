@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.support.v4.app.FragmentManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.udacity.backingapp.R;
@@ -43,6 +44,9 @@ public class RecipeStepDetail extends AppCompatActivity {
     @BindView(R.id.next_step)
     Button nextStep;
 
+    @Nullable @BindView(R.id.main_step_container)
+    ScrollView mainStepContainer;
+
     @Inject
     Context context;
 
@@ -57,6 +61,8 @@ public class RecipeStepDetail extends AppCompatActivity {
 
         recipeStepDescriptionFragment = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepFragment();
 
+        final UserInterfaceComponent userInterfaceComponent = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build();
+
         final RecipeStepDetail recipeStepDetail = this;
         BackingAppApplication.appComponent().inject(recipeStepDetail);
 
@@ -70,7 +76,7 @@ public class RecipeStepDetail extends AppCompatActivity {
                 public void onClick(View view) {
                     //In order to get a new reference of RecipeStepDescriptionFragment (which I need to replace the fragment) I have to reinject this class
                     //BackingAppApplication.appComponent().inject(recipeStepDetail);
-                    recipeStepDescriptionFragment = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepFragment();
+                    recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepFragment();
                     stepIndex--;
                     nextStep.setEnabled(true);
                     if (stepIndex == 0){
@@ -80,6 +86,9 @@ public class RecipeStepDetail extends AppCompatActivity {
                         recipeStepDescriptionFragment.setStep(stepsList.get(stepIndex - 1));
                     }
                     updateFragment();
+
+                    if (mainStepContainer != null)
+                        mainStepContainer.scrollTo(0, 0);
                 }
             });
 
@@ -88,7 +97,7 @@ public class RecipeStepDetail extends AppCompatActivity {
                 public void onClick(View view) {
                     //In order to get a new reference of RecipeStepDescriptionFragment (which I need to replace the fragment) I have to reinject this class
                     //BackingAppApplication.appComponent().inject(recipeStepDetail);
-                    recipeStepDescriptionFragment = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepFragment();
+                    recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepFragment();
                     stepIndex++;
                     previusStep.setEnabled(true);
                     if (stepIndex == stepsList.size()) {
@@ -96,6 +105,9 @@ public class RecipeStepDetail extends AppCompatActivity {
                     }
                     recipeStepDescriptionFragment.setStep(stepsList.get(stepIndex - 1));
                     updateFragment();
+
+                    if (mainStepContainer != null)
+                        mainStepContainer.scrollTo(0, 0);
                 }
             });
 

@@ -3,10 +3,7 @@ package com.udacity.backingapp.ui.adapters;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Region;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,9 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.udacity.backingapp.BuildConfig;
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.dagger.ApplicationModule;
@@ -82,7 +78,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view = inflater.inflate(R.layout.recipe_card, parent, false);
+        View view = inflater.inflate(R.layout.recipe_tile, parent, false);
         RecipesViewHolder recipesViewHolder = new RecipesViewHolder(view);
         return recipesViewHolder;
     }
@@ -188,6 +184,12 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
                                         }
                                     }
                                     return null;
+                                }
+
+                                @Override
+                                protected void onPostExecute(Void aVoid) {
+                                    super.onPostExecute(aVoid);
+                                    Toast.makeText(context, "Image loaded and saved: " + recipeName, Toast.LENGTH_LONG).show();
                                 }
                             }.execute();
 
