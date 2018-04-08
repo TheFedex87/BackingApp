@@ -25,6 +25,9 @@ public class Recipe implements Parcelable {
     @SerializedName("steps")
     private List<Step> steps;
 
+    @SerializedName("image")
+    private String image;
+
     public int getId() {
         return id;
     }
@@ -57,6 +60,13 @@ public class Recipe implements Parcelable {
         steps = steps;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     @Override
     public int describeContents() {
@@ -69,6 +79,7 @@ public class Recipe implements Parcelable {
         dest.writeString(this.name);
         dest.writeList(this.ingredients);
         dest.writeList(this.steps);
+        dest.writeString(this.image);
     }
 
     public Recipe() {
@@ -81,6 +92,7 @@ public class Recipe implements Parcelable {
         in.readList(this.ingredients, Ingredient.class.getClassLoader());
         this.steps = new ArrayList<Step>();
         in.readList(this.steps, Step.class.getClassLoader());
+        this.image = in.readString();
     }
 
     public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {

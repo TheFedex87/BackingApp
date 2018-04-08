@@ -111,44 +111,50 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
             final String recipeName = recipes.get(position).getName();
             recipeTitleTV.setText(recipeName);
 
-            bindImage(recipeName);
+            bindImage(recipes.get(position));
         }
 
         public void onClick(View view) {
             recipeClickListener.onRecipeClick(getAdapterPosition());
         }
 
-        private void bindImage(final String recipeName){
-            String apyKey = BuildConfig.GOOGLE_SEARCH_API_KEY;
+        private void bindImage(final Recipe recipe){
+            if(recipe.getImage() != null && !recipe.getImage().isEmpty()){
+                networkComponent.getPicasso().load(recipe.getImage()).fit().into(recipeImage);
+            } else {
 
-            ContextWrapper cw = new ContextWrapper(context);
-            final File directory = cw.getDir(IMAGE_DIRECTORY, Context.MODE_PRIVATE);
-            final File myImageFile = new File(directory, recipeName);
+                final String recipeName = recipe.getName();
+                String apyKey = BuildConfig.GOOGLE_SEARCH_API_KEY;
 
-            if (myImageFile.exists()){
-                networkComponent.getPicasso().load(myImageFile).fit().into(recipeImage);
-            } else if(!apyKey.isEmpty()) {
-                networkComponent.getGoogleImagesApiInterface().googleImages("https://www.googleapis.com/customsearch/v1?&cx=001116670235643120820:acj_gjncnsa&searchType=image&safe=high&imgSize=large&exactTerms=dessert&fileType=jpg",
-                        recipeName,
-                        apyKey)
-                        .enqueue(new Callback<GoogleImageRoot>() {
-                            @Override
-                            public void onResponse(Call<GoogleImageRoot> call, Response<GoogleImageRoot> response) {
-                                GoogleImageRoot googleImageRoot = response.body();
-                                if (googleImageRoot != null && googleImageRoot.items != null) {
-                                    String imagePath = googleImageRoot.items.get(0).getLink();
-                                    picassoLoader(googleImageRoot.items, imagePath, directory, recipeName);
-                                }else{
-                                    Timber.d("Google API calls expired.");
+                ContextWrapper cw = new ContextWrapper(context);
+                final File directory = cw.getDir(IMAGE_DIRECTORY, Context.MODE_PRIVATE);
+                final File myImageFile = new File(directory, recipeName);
+
+                if (myImageFile.exists()) {
+                    networkComponent.getPicasso().load(myImageFile).fit().into(recipeImage);
+                } else if (!apyKey.isEmpty()) {
+                    networkComponent.getGoogleImagesApiInterface().googleImages("https://www.googleapis.com/customsearch/v1?&cx=001116670235643120820:acj_gjncnsa&searchType=image&safe=high&imgSize=large&exactTerms=dessert&fileType=jpg",
+                            recipeName,
+                            apyKey)
+                            .enqueue(new Callback<GoogleImageRoot>() {
+                                @Override
+                                public void onResponse(Call<GoogleImageRoot> call, Response<GoogleImageRoot> response) {
+                                    GoogleImageRoot googleImageRoot = response.body();
+                                    if (googleImageRoot != null && googleImageRoot.items != null) {
+                                        String imagePath = googleImageRoot.items.get(0).getLink();
+                                        picassoLoader(googleImageRoot.items, imagePath, directory, recipeName);
+                                    } else {
+                                        Timber.d("Google API calls expired.");
+                                    }
+
                                 }
 
-                            }
+                                @Override
+                                public void onFailure(Call<GoogleImageRoot> call, Throwable t) {
 
-                            @Override
-                            public void onFailure(Call<GoogleImageRoot> call, Throwable t) {
-
-                            }
-                        });
+                                }
+                            });
+                }
             }
         }
 
