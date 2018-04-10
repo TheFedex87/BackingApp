@@ -195,7 +195,6 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
                                 @Override
                                 protected void onPostExecute(Void aVoid) {
                                     super.onPostExecute(aVoid);
-                                    Toast.makeText(context, "Image loaded and saved: " + recipeName, Toast.LENGTH_LONG).show();
                                 }
                             }.execute();
 

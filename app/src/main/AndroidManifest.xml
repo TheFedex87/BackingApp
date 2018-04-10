@@ -46,6 +46,8 @@
                 android:resource="@xml/recipe_ingredients_widget_info" />
         </receiver>
 
+        <service android:name=".ui.widgets.AdapterViewFlipperWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service android:name=".ui.widgets.RecipeIngredientsWidgetService" />
 
     </application>
