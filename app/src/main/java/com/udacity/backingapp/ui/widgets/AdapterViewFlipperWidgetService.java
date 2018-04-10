@@ -12,6 +12,7 @@ import com.udacity.backingapp.R;
 import com.udacity.backingapp.dagger.ApplicationModule;
 import com.udacity.backingapp.dagger.DaggerNetworkComponent;
 import com.udacity.backingapp.dagger.NetworkComponent;
+import com.udacity.backingapp.model.Ingredient;
 import com.udacity.backingapp.model.Recipe;
 
 import java.util.List;
@@ -85,6 +86,13 @@ class AdapterViewFlipperWidgetFactory implements RemoteViewsService.RemoteViewsF
     public RemoteViews getViewAt(int i) {
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.single_recipe_widget);
         rv.setTextViewText(R.id.widget_recipe_title, recipes.get(i).getName());
+
+        String ingredients = "";
+        for (Ingredient ingredient : recipes.get(i).getIngredients()) {
+            ingredients += ingredient.getIngredient() + "\n";
+        }
+
+        rv.setTextViewText(R.id.widget_ingredients_list, ingredients);
 
         return rv;
     }
