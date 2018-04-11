@@ -14,8 +14,10 @@ import com.udacity.backingapp.R;
  */
 
 public class RecipeIngredientsWidgetService extends IntentService {
+    private static final String TAG = RecipeIngredientsWidgetService.class.getSimpleName();
     public static final String ACTION_MOVE_NEXT_RECIPE = "com.udacity.backingapp.ui.widgets.action.move_next_recipe";
     public static final String ACTION_MOVE_PREV_RECIPE = "com.udacity.backingapp.ui.widgets.action.move_prev_recipe";
+    public static final String ACTION_CHANGE_RECIPE = "com.udacity.backingapp.ui.widgets.action.change_recipe";
 
     public RecipeIngredientsWidgetService(){
         super(RecipeIngredientsWidgetService.class.getSimpleName());
@@ -27,14 +29,17 @@ public class RecipeIngredientsWidgetService extends IntentService {
             int appWidgetId = intent.getIntExtra("APP_WIDGET_ID", 0);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
             RemoteViews rv = new RemoteViews(getApplicationContext().getPackageName(), R.layout.recipe_ingredients_widget);
-            rv.showNext(R.id.widget_flipper);
-            appWidgetManager.updateAppWidget(appWidgetId, rv);
+
+            //rv.showNext(R.id.widget_flipper);
+            //appWidgetManager.updateAppWidget(appWidgetId, rv);
         } else if(intent.getAction().equals(ACTION_MOVE_PREV_RECIPE)) {
             int appWidgetId = intent.getIntExtra("APP_WIDGET_ID", 0);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
             RemoteViews rv = new RemoteViews(getApplicationContext().getPackageName(), R.layout.recipe_ingredients_widget);
-            rv.showPrevious(R.id.widget_flipper);
-            appWidgetManager.updateAppWidget(appWidgetId, rv);
+            //rv.showPrevious(R.id.widget_flipper);
+            //appWidgetManager.updateAppWidget(appWidgetId, rv);
+        } else if(intent.getAction().equals(ACTION_CHANGE_RECIPE)){
+            Log.d(TAG, "Received action: " + ACTION_CHANGE_RECIPE);
         }
     }
 }

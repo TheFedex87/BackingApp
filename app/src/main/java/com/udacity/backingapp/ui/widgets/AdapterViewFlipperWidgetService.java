@@ -1,5 +1,6 @@
 package com.udacity.backingapp.ui.widgets;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,6 +17,7 @@ import com.udacity.backingapp.dagger.NetworkComponent;
 import com.udacity.backingapp.model.Ingredient;
 import com.udacity.backingapp.model.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -31,10 +33,10 @@ public class AdapterViewFlipperWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        List<Recipe> recipes = null;
+        List<String> recipes = null;
         if (intent.hasExtra("BUNDLE_RECIPES")) {
             Bundle b = intent.getBundleExtra("BUNDLE_RECIPES");
-            recipes = b.getParcelableArrayList("RECIPES_LIST");
+            recipes = b.getStringArrayList("RECIPES_LIST");
         }
         Log.d(TAG, "Creating adapter service");
         return new AdapterViewFlipperWidgetFactory(getApplicationContext(), recipes);
@@ -44,9 +46,9 @@ public class AdapterViewFlipperWidgetService extends RemoteViewsService {
 class AdapterViewFlipperWidgetFactory implements RemoteViewsService.RemoteViewsFactory {
     private final static String TAG = AdapterViewFlipperWidgetFactory.class.getSimpleName();
     private final Context context;
-    private List<Recipe> recipes;
+    private List<String> recipes;
 
-    public AdapterViewFlipperWidgetFactory(Context context, List<Recipe> recipes) {
+    public AdapterViewFlipperWidgetFactory(Context context, List<String> recipes) {
         this.context = context;
         this.recipes = recipes;
     }
@@ -75,14 +77,24 @@ class AdapterViewFlipperWidgetFactory implements RemoteViewsService.RemoteViewsF
     @Override
     public RemoteViews getViewAt(int i) {
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.single_recipe_widget);
-        rv.setTextViewText(R.id.widget_recipe_title, recipes.get(i).getName());
+        rv.setTextViewText(R.id.widget_recipe_title, recipes.get(i));
 
-        String ingredients = "";
-        for (Ingredient ingredient : recipes.get(i).getIngredients()) {
-            ingredients += ingredient.getIngredient() + "\n";
-        }
+//        Intent intent = new Intent(context, ListViewWidgetService.class);
+//        Bundle b = new Bundle();
+//        b.putParcelableArrayList("INGREDIENTS_LIST", new ArrayList(recipes.get(i).getIngredients()));
+//        intent.putExtra("BUNDLE_INGREDIENTS", b);
+//        rv.setRemoteAdapter(R.id.widget_ingredients_list, intent);
+//        Log.d(TAG, "Setting remote ListViewWidgetService");
+//        rv.setEmptyView(R.id.widget_ingredients_list, R.id.widget_empty_ingredients);
 
-        rv.setTextViewText(R.id.widget_ingredients_list, ingredients);
+//        Intent intent = new Intent(context, RecipeIngredientsWidgetService.class);
+//        intent.setAction(RecipeIngredientsWidgetService.ACTION_CHANGE_RECIPE);
+//        Bundle b = new Bundle();
+//        b.putParcelableArrayList("INGREDIENTS_LIST", new ArrayList(recipes.get(i).getIngredients()));
+//        intent.putExtra("BUNDLE_INGREDIENTS", b);
+//        context.startService(intent);
+//
+//        Log.d(TAG, "Number of ingredients: " + recipes.get(i).getIngredients().size());
 
         return rv;
     }

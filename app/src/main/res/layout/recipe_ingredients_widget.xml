@@ -6,15 +6,14 @@
 
 
 
-    <AdapterViewFlipper
+    <ListView
         android:id="@+id/widget_flipper"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-
         android:padding="@dimen/widget_margin">
 
-    </AdapterViewFlipper>
+    </ListView>
 
     <RelativeLayout
         android:layout_width="match_parent"
