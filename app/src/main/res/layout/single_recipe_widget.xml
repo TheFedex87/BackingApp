@@ -11,4 +11,19 @@
         android:layout_height="wrap_content"
         android:textSize="30sp"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/widget_ingredients_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+        android:textSize="24sp"/>
+    </ScrollView>
+
+    <!--<ListView-->
+        <!--android:id="@+id/widget_ingredients_list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"></ListView>-->
+
 </LinearLayout>
