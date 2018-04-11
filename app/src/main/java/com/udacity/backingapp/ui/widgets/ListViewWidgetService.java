@@ -8,6 +8,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.udacity.backingapp.R;
+import com.udacity.backingapp.model.Recipe;
 
 import java.util.List;
 
@@ -22,27 +23,27 @@ public class ListViewWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        List<String> ingredients = null;
+        Recipe recipe = null;
         int appWidgetId = -1;
         if (intent.hasExtra("BUNDLE")) {
             Bundle b = intent.getBundleExtra("BUNDLE");
-            ingredients = b.getStringArrayList("INGREDIENTS_LIST");
+            recipe = b.getParcelable("RECIPE");
             appWidgetId = b.getInt("APP_WIDGET_ID");
         }
         Log.d(TAG, "Creating adapter service");
-        return new ListViewWidgetFactory(getApplicationContext(), ingredients, appWidgetId);
+        return new ListViewWidgetFactory(getApplicationContext(), recipe, appWidgetId);
     }
 }
 
 class ListViewWidgetFactory implements RemoteViewsService.RemoteViewsFactory {
     private final static String TAG = ListViewWidgetFactory.class.getSimpleName();
     private final Context context;
-    private List<String> ingredients;
+    private Recipe recipe;
     int appWidgetId = -1;
 
-    public ListViewWidgetFactory(Context context, List<String> ingredients, int appWidgetId) {
+    public ListViewWidgetFactory(Context context, Recipe recipe, int appWidgetId) {
         this.context = context;
-        this.ingredients = ingredients;
+        this.recipe = recipe;
         this.appWidgetId = appWidgetId;
     }
 
@@ -63,8 +64,9 @@ class ListViewWidgetFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
-        if (ingredients == null) return 0;
-        return ingredients.size();
+        if (recipe == null) return 0;
+        if (recipe.getIngredients() == null) return 1;
+        return recipe.getIngredients().size() + 1;
     }
 
     @Override
@@ -72,10 +74,10 @@ class ListViewWidgetFactory implements RemoteViewsService.RemoteViewsFactory {
         RemoteViews rv = null;
         if (i == 0){
             rv = new RemoteViews(context.getPackageName(), R.layout.single_line_recipe_name_widget);
-            rv.setTextViewText(R.id.widget_recipe_title, ingredients.get(i));
+            rv.setTextViewText(R.id.widget_recipe_title, recipe.getName());
         } else {
             rv = new RemoteViews(context.getPackageName(), R.layout.single_line_ingredient_widget);
-            rv.setTextViewText(R.id.widget_recipe_ingredient, ingredients.get(i));
+            rv.setTextViewText(R.id.widget_recipe_ingredient, recipe.getIngredients().get(i - 1).getIngredient());
         }
 
         return rv;

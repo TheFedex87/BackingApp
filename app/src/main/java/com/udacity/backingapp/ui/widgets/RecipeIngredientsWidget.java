@@ -40,16 +40,11 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
         Recipe recipe = recipes.get(currentRecipeId);
 
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add(recipe.getName());
-        for(Ingredient ingredient : recipe.getIngredients())
-            ingredients.add(ingredient.getIngredient());
-
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
         Intent intent = new Intent(context, ListViewWidgetService.class);
         Bundle b = new Bundle();
-        b.putStringArrayList("INGREDIENTS_LIST", ingredients);
+        b.putParcelable("RECIPE", recipe);
         b.putInt("APP_WIDGET_ID", appWidgetId);
         intent.putExtra("BUNDLE", b);
         Random rnd = new Random();
