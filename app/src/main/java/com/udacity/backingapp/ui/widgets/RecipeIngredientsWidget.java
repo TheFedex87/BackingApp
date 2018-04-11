@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -48,7 +47,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
-        Intent intent = new Intent(context, AdapterViewFlipperWidgetService.class);
+        Intent intent = new Intent(context, ListViewWidgetService.class);
         Bundle b = new Bundle();
         b.putStringArrayList("INGREDIENTS_LIST", ingredients);
         b.putInt("APP_WIDGET_ID", appWidgetId);
