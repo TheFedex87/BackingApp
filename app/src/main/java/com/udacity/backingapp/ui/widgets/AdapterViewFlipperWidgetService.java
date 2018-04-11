@@ -1,10 +1,10 @@
 package com.udacity.backingapp.ui.widgets;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -19,6 +19,7 @@ import com.udacity.backingapp.model.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,24 +34,28 @@ public class AdapterViewFlipperWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        List<String> recipes = null;
+        List<Recipe> recipes = null;
+        int appWidgetId = -1;
         if (intent.hasExtra("BUNDLE_RECIPES")) {
             Bundle b = intent.getBundleExtra("BUNDLE_RECIPES");
-            recipes = b.getStringArrayList("RECIPES_LIST");
+            recipes = b.getParcelableArrayList("RECIPES_LIST");
+            appWidgetId = b.getInt("APP_WIDGET_ID");
         }
         Log.d(TAG, "Creating adapter service");
-        return new AdapterViewFlipperWidgetFactory(getApplicationContext(), recipes);
+        return new AdapterViewFlipperWidgetFactory(getApplicationContext(), recipes, appWidgetId);
     }
 }
 
 class AdapterViewFlipperWidgetFactory implements RemoteViewsService.RemoteViewsFactory {
     private final static String TAG = AdapterViewFlipperWidgetFactory.class.getSimpleName();
     private final Context context;
-    private List<String> recipes;
+    private List<Recipe> recipes;
+    int appWidgetId = -1;
 
-    public AdapterViewFlipperWidgetFactory(Context context, List<String> recipes) {
+    public AdapterViewFlipperWidgetFactory(Context context, List<Recipe> recipes, int appWidgetId) {
         this.context = context;
         this.recipes = recipes;
+        this.appWidgetId = appWidgetId;
     }
 
     @Override
@@ -77,24 +82,21 @@ class AdapterViewFlipperWidgetFactory implements RemoteViewsService.RemoteViewsF
     @Override
     public RemoteViews getViewAt(int i) {
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.single_recipe_widget);
-        rv.setTextViewText(R.id.widget_recipe_title, recipes.get(i));
+        rv.setTextViewText(R.id.widget_recipe_title, recipes.get(i).getName());
 
-//        Intent intent = new Intent(context, ListViewWidgetService.class);
-//        Bundle b = new Bundle();
-//        b.putParcelableArrayList("INGREDIENTS_LIST", new ArrayList(recipes.get(i).getIngredients()));
-//        intent.putExtra("BUNDLE_INGREDIENTS", b);
-//        rv.setRemoteAdapter(R.id.widget_ingredients_list, intent);
-//        Log.d(TAG, "Setting remote ListViewWidgetService");
-//        rv.setEmptyView(R.id.widget_ingredients_list, R.id.widget_empty_ingredients);
+        Intent intent = new Intent(context, ListViewWidgetService.class);
+        intent.putExtra("APP_WIDGET_ID", appWidgetId);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
-//        Intent intent = new Intent(context, RecipeIngredientsWidgetService.class);
-//        intent.setAction(RecipeIngredientsWidgetService.ACTION_CHANGE_RECIPE);
-//        Bundle b = new Bundle();
-//        b.putParcelableArrayList("INGREDIENTS_LIST", new ArrayList(recipes.get(i).getIngredients()));
-//        intent.putExtra("BUNDLE_INGREDIENTS", b);
-//        context.startService(intent);
-//
-//        Log.d(TAG, "Number of ingredients: " + recipes.get(i).getIngredients().size());
+        //Bundle b = new Bundle();
+        //b.putParcelableArrayList("INGREDIENTS_LIST", new ArrayList(recipes.get(i).getIngredients()));
+        //intent.putExtra("BUNDLE_INGREDIENTS", b);
+        rv.setRemoteAdapter(R.id.widget_ingredients_list, intent);
+
+//        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+//        appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
+//        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_ingredients_list);
+
 
         return rv;
     }

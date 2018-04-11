@@ -59,14 +59,15 @@ class ListViewWidgetFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
-        if (ingredients == null) return 0;
-        return ingredients.size();
+        return 1;
+        //if (ingredients == null) return 0;
+        //return ingredients.size();
     }
 
     @Override
     public RemoteViews getViewAt(int i) {
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.ingredient_widget);
-        rv.setTextViewText(R.id.ingredient_name_widget, ingredients.get(i).getIngredient());
+        rv.setTextViewText(R.id.ingredient_name_widget, "PDPDPD");
 
         return rv;
     }

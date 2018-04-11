@@ -29,15 +29,14 @@ public class RecipeIngredientsWidgetService extends IntentService {
             int appWidgetId = intent.getIntExtra("APP_WIDGET_ID", 0);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
             RemoteViews rv = new RemoteViews(getApplicationContext().getPackageName(), R.layout.recipe_ingredients_widget);
-
-            //rv.showNext(R.id.widget_flipper);
-            //appWidgetManager.updateAppWidget(appWidgetId, rv);
+            rv.showNext(R.id.widget_flipper);
+            appWidgetManager.updateAppWidget(appWidgetId, rv);
         } else if(intent.getAction().equals(ACTION_MOVE_PREV_RECIPE)) {
             int appWidgetId = intent.getIntExtra("APP_WIDGET_ID", 0);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
             RemoteViews rv = new RemoteViews(getApplicationContext().getPackageName(), R.layout.recipe_ingredients_widget);
-            //rv.showPrevious(R.id.widget_flipper);
-            //appWidgetManager.updateAppWidget(appWidgetId, rv);
+            rv.showPrevious(R.id.widget_flipper);
+            appWidgetManager.updateAppWidget(appWidgetId, rv);
         } else if(intent.getAction().equals(ACTION_CHANGE_RECIPE)){
             Log.d(TAG, "Received action: " + ACTION_CHANGE_RECIPE);
         }

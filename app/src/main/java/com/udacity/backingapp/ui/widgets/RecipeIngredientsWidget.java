@@ -31,43 +31,26 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     //private List<Recipe> recipes;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, int[] appWidgetIds, List<Recipe> recipes, int recipeId) {
-
-        Recipe recipe = recipes.get(recipeId);
+                                int appWidgetId, int[] appWidgetIds, List<Recipe> recipes) {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
-
-        ArrayList<String> recipeIngredients = new ArrayList<>();
-        recipeIngredients.add(recipe.getName());
-        for (Ingredient ing : recipe.getIngredients()){
-            recipeIngredients.add(ing.getIngredient());
-        }
-
         Intent intent = new Intent(context, AdapterViewFlipperWidgetService.class);
         Bundle b = new Bundle();
-        //b.putParcelableArrayList("RECIPES_LIST", new ArrayList(recipes));
-        b.putStringArrayList("RECIPES_LIST", recipeIngredients);
+        b.putParcelableArrayList("RECIPES_LIST", new ArrayList(recipes));
+        b.putInt("APP_WIDGET_ID", appWidgetId);
         intent.putExtra("BUNDLE_RECIPES", b);
         views.setRemoteAdapter(R.id.widget_flipper, intent);
         Log.d(TAG, "Setting remote adapter");
 
         Intent navigateRecipeIntent = new Intent(context, RecipeIngredientsWidgetService.class);
-        int nextRecipeId = 0;
-        nextRecipeId = recipeId+1;
-        if (nextRecipeId >= recipes.size()) nextRecipeId = 0;
         navigateRecipeIntent.setAction(RecipeIngredientsWidgetService.ACTION_MOVE_NEXT_RECIPE);
-        navigateRecipeIntent.putExtra("NEXT_RECIPE_ID", nextRecipeId);
         navigateRecipeIntent.putExtra("APP_WIDGET_ID", appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, navigateRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget_next_view, pendingIntent);
 
         navigateRecipeIntent = new Intent(context, RecipeIngredientsWidgetService.class);
-        int prevRecipeId = 0;
-        prevRecipeId = recipeId - 1;
-        if (prevRecipeId == -1) prevRecipeId = recipes.size() - 1;
         navigateRecipeIntent.setAction(RecipeIngredientsWidgetService.ACTION_MOVE_PREV_RECIPE);
-        navigateRecipeIntent.putExtra("PREV_RECIPE_ID", prevRecipeId);
         navigateRecipeIntent.putExtra("APP_WIDGET_ID", appWidgetId);
         pendingIntent = PendingIntent.getService(context, 0, navigateRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget_prev_view, pendingIntent);
@@ -96,7 +79,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
                 List<Recipe> recipes = response.body();
                 // There may be multiple widgets active, so update all of them
                 for (int appWidgetId : appWidgetIds) {
-                    updateAppWidget(context, appWidgetManager, appWidgetId, appWidgetIds, recipes, 0);
+                    updateAppWidget(context, appWidgetManager, appWidgetId, appWidgetIds, recipes);
                 }
             }
 
