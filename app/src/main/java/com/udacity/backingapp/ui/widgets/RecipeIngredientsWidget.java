@@ -5,10 +5,22 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.udacity.backingapp.R;
+import com.udacity.backingapp.dagger.ApplicationModule;
+import com.udacity.backingapp.dagger.DaggerNetworkComponent;
+import com.udacity.backingapp.dagger.NetworkComponent;
+import com.udacity.backingapp.model.Recipe;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Implementation of App Widget functionality.
@@ -18,18 +30,19 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     //private List<Recipe> recipes;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, int[] appWidgetIds) {
+                                int appWidgetId, int[] appWidgetIds, List<Recipe> recipes) {
 
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
         Intent intent = new Intent(context, AdapterViewFlipperWidgetService.class);
-        //Bundle b = new Bundle();
-        //b.putParcelableArrayList("RECIPES_LIST", new ArrayList(recipes));
-        //b.putInt("REC", 1);
-        //intent.putExtras(b);
+        Bundle b = new Bundle();
+        b.putParcelableArrayList("RECIPES_LIST", new ArrayList(recipes));
+
+        intent.putExtra("BUNDLE_RECIPES", b);
 
         //intent.putParcelableArrayListExtra("RECIPES_LIST", new ArrayList(recipes));
+
         views.setRemoteAdapter(R.id.widget_flipper, intent);
         Log.d(TAG, "Setting remote adapter");
 
@@ -52,26 +65,28 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     }
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-//        NetworkComponent networkComponent = DaggerNetworkComponent.builder().applicationModule(new ApplicationModule(context)).build();
-//
-//        networkComponent.getRecepiesApiInterface().recipes().enqueue(new Callback<List<Recipe>>() {
-//            @Override
-//            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-//                List<Recipe> recipes = response.body();
-//                // There may be multiple widgets active, so update all of them
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Recipe>> call, Throwable t) {
-//
-//            }
-//        });
-        Log.d(TAG, "Updating widget");
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId, appWidgetIds);
-        }
+    public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
+        NetworkComponent networkComponent = DaggerNetworkComponent.builder().applicationModule(new ApplicationModule(context)).build();
+
+        networkComponent.getRecepiesApiInterface().recipes().enqueue(new Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                List<Recipe> recipes = response.body();
+                // There may be multiple widgets active, so update all of them
+                for (int appWidgetId : appWidgetIds) {
+                    updateAppWidget(context, appWidgetManager, appWidgetId, appWidgetIds, recipes);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+
+            }
+        });
+//        Log.d(TAG, "Updating widget");
+//        for (int appWidgetId : appWidgetIds) {
+//            updateAppWidget(context, appWidgetManager, appWidgetId, appWidgetIds);
+//        }
 
     }
 

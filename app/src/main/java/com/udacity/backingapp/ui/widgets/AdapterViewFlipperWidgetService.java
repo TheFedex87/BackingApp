@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -29,10 +30,13 @@ public class AdapterViewFlipperWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        //List<Recipe> recipes = intent.getParcelableArrayListExtra("RECIPES_LIST");
+        List<Recipe> recipes = null;
+        if (intent.hasExtra("BUNDLE_RECIPES")) {
+            Bundle b = intent.getBundleExtra("BUNDLE_RECIPES");
+            recipes = b.getParcelableArrayList("RECIPES_LIST");
+        }
         Log.d(TAG, "Creating adapter service");
-
-        return new AdapterViewFlipperWidgetFactory(getApplicationContext());
+        return new AdapterViewFlipperWidgetFactory(getApplicationContext(), recipes);
     }
 }
 
@@ -41,28 +45,14 @@ class AdapterViewFlipperWidgetFactory implements RemoteViewsService.RemoteViewsF
     private final Context context;
     private List<Recipe> recipes;
 
-    public AdapterViewFlipperWidgetFactory(Context context) {
+    public AdapterViewFlipperWidgetFactory(Context context, List<Recipe> recipes) {
         this.context = context;
+        this.recipes = recipes;
     }
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "Creating adapter factory");
-        NetworkComponent networkComponent = DaggerNetworkComponent.builder().applicationModule(new ApplicationModule(context)).build();
-        networkComponent.getRecepiesApiInterface().recipes().enqueue(new Callback<List<Recipe>>() {
-            @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                recipes = response.body();
-                // There may be multiple widgets active, so update all of them
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetManager.getAppWidgetIds(new ComponentName(context, RecipeIngredientsWidget.class)), R.id.widget_flipper);
-            }
 
-            @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
-
-            }
-        });
     }
 
     @Override
