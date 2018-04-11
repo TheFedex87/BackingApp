@@ -12,10 +12,10 @@
         android:textSize="30sp"
         android:background="#0F0"/>
 
-    <ListView
-        android:id="@+id/widget_ingredients_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"></ListView>
+    <!--<ListView-->
+        <!--android:id="@+id/widget_ingredients_list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@android:color/holo_red_dark"></ListView>-->
 
 </LinearLayout>

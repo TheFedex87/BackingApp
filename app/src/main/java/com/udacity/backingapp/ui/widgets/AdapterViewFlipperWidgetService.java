@@ -32,29 +32,31 @@ import retrofit2.Response;
 public class AdapterViewFlipperWidgetService extends RemoteViewsService {
     private final static String TAG = AdapterViewFlipperWidgetService.class.getSimpleName();
 
+
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        List<Recipe> recipes = null;
+        List<String> ingredients = null;
         int appWidgetId = -1;
-        if (intent.hasExtra("BUNDLE_RECIPES")) {
-            Bundle b = intent.getBundleExtra("BUNDLE_RECIPES");
-            recipes = b.getParcelableArrayList("RECIPES_LIST");
+        if (intent.hasExtra("BUNDLE")) {
+            Bundle b = intent.getBundleExtra("BUNDLE");
+            ingredients = b.getStringArrayList("INGREDIENTS_LIST");
             appWidgetId = b.getInt("APP_WIDGET_ID");
         }
         Log.d(TAG, "Creating adapter service");
-        return new AdapterViewFlipperWidgetFactory(getApplicationContext(), recipes, appWidgetId);
+        return new AdapterViewFlipperWidgetFactory(getApplicationContext(), ingredients, appWidgetId);
     }
 }
 
 class AdapterViewFlipperWidgetFactory implements RemoteViewsService.RemoteViewsFactory {
     private final static String TAG = AdapterViewFlipperWidgetFactory.class.getSimpleName();
     private final Context context;
-    private List<Recipe> recipes;
+    private List<String> ingredients;
     int appWidgetId = -1;
 
-    public AdapterViewFlipperWidgetFactory(Context context, List<Recipe> recipes, int appWidgetId) {
+    public AdapterViewFlipperWidgetFactory(Context context, List<String> ingredients, int appWidgetId) {
         this.context = context;
-        this.recipes = recipes;
+        this.ingredients = ingredients;
         this.appWidgetId = appWidgetId;
     }
 
@@ -75,28 +77,14 @@ class AdapterViewFlipperWidgetFactory implements RemoteViewsService.RemoteViewsF
 
     @Override
     public int getCount() {
-        if (recipes == null) return 0;
-        return recipes.size();
+        if (ingredients == null) return 0;
+        return ingredients.size();
     }
 
     @Override
     public RemoteViews getViewAt(int i) {
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.single_recipe_widget);
-        rv.setTextViewText(R.id.widget_recipe_title, recipes.get(i).getName());
-
-        Intent intent = new Intent(context, ListViewWidgetService.class);
-        intent.putExtra("APP_WIDGET_ID", appWidgetId);
-        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-
-        //Bundle b = new Bundle();
-        //b.putParcelableArrayList("INGREDIENTS_LIST", new ArrayList(recipes.get(i).getIngredients()));
-        //intent.putExtra("BUNDLE_INGREDIENTS", b);
-        rv.setRemoteAdapter(R.id.widget_ingredients_list, intent);
-
-//        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-//        appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
-//        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_ingredients_list);
-
+        rv.setTextViewText(R.id.widget_recipe_title, ingredients.get(i));
 
         return rv;
     }
