@@ -14,8 +14,9 @@ import com.udacity.backingapp.R;
 import com.udacity.backingapp.dagger.ApplicationModule;
 import com.udacity.backingapp.dagger.DaggerNetworkComponent;
 import com.udacity.backingapp.dagger.NetworkComponent;
-import com.udacity.backingapp.model.Ingredient;
 import com.udacity.backingapp.model.Recipe;
+import com.udacity.backingapp.ui.activities.MainActivity;
+import com.udacity.backingapp.ui.activities.RecipeDetail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
+
         Intent intent = new Intent(context, ListViewWidgetService.class);
         Bundle b = new Bundle();
         b.putParcelable("RECIPE", recipe);
@@ -49,7 +51,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
         intent.putExtra("BUNDLE", b);
         Random rnd = new Random();
         intent.setData(Uri.fromParts("content", String.valueOf(rnd.nextInt()), null));
-        views.setRemoteAdapter(R.id.widget_flipper, intent);
+        views.setRemoteAdapter(R.id.widget_list_view, intent);
         Log.d(TAG, "Setting remote adapter");
 
         Intent navigateRecipeIntent = new Intent(context, RecipeIngredientsWidgetService.class);
@@ -78,19 +80,19 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
         pendingIntent = PendingIntent.getService(context, 0, navigateRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget_prev_view, pendingIntent);
 
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_flipper);
+        Intent openRecipeDetails = new Intent(context, RecipeDetail.class);
+        PendingIntent recipeDetailPendingIntent = PendingIntent.getActivity(context, 0, openRecipeDetails, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setPendingIntentTemplate(R.id.widget_list_view, recipeDetailPendingIntent);
+
+        views.setTextViewText(R.id.widget_recipe_name, recipe.getName());
+        Intent recipeListIntent = new Intent(context, MainActivity.class);
+        PendingIntent recipeListPendingIntent = PendingIntent.getActivity(context, 0, recipeListIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.widget_recipe_name, recipeListPendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-
-
-//    public static void updateIngredientsList(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, int appWidgetId, List<Ingredient> ingredients){
-//        //List<Recipe> recipes = new ArrayList<>();
-//        updateAppWidget(context, appWidgetManager, appWidgetId, appWidgetIds, null, ingredients);
-//
-//    }
     public static void recipeChange(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, int appWidgetId, List<Recipe> recipes, int currentRecipeId){
         for (int appWidgetIdLocal : appWidgetIds){
             if (appWidgetIdLocal == appWidgetId){

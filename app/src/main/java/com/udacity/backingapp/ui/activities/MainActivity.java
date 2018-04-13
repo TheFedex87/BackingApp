@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.udacity.backingapp.R;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
     private ApplicationModule applicationModule;
     private NetworkComponent networkComponent;
 
+    private Parcelable layoutManagerState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,33 +60,23 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
 
         networkComponent = DaggerNetworkComponent.builder().applicationModule(applicationModule).build();
 
+        if (savedInstanceState != null){
+            if (savedInstanceState.containsKey("scroll_position")){
+                layoutManagerState = savedInstanceState.getParcelable("scroll_position");
+            }
+        }
+
         initUi();
 
+        //Retrieve the list of recipes from web using Retrofit
         networkComponent.getRecepiesApiInterface().recipes().enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 recipes = response.body();
-
-                /*String apyKey = "AIzaSyDZ2lYm5KXgL1XuxsG2EfNYfEiOqZzkZW4";
-
-                final List<String> imagesUrl = new ArrayList<>();
-                for(Recipe recipe : recipes){
-                    networkComponent.getGoogleImagesApiInterface().googleImages("https://www.googleapis.com/customsearch/v1?&cx=001116670235643120820:acj_gjncnsa&searchType=image&exactTerms=dessert&fileType=jpg", recipe.getName(), apyKey).enqueue(new Callback<GoogleImageRoot>() {
-                        @Override
-                        public void onResponse(Call<GoogleImageRoot> call, Response<GoogleImageRoot> response) {
-                            GoogleImageRoot googleImageRoot = response.body();
-                            imagesUrl.add(googleImageRoot.items.get(0).getLink());
-                        }
-
-                        @Override
-                        public void onFailure(Call<GoogleImageRoot> call, Throwable t) {
-
-                        }
-                    });
-                }*/
-
-                //recipesAdapter.setImagesUri(imagesUrl);
                 recipesAdapter.swapRecipesList(recipes);
+                if (layoutManagerState != null)
+                    recipesContainerList.getLayoutManager().onRestoreInstanceState(layoutManagerState);
+                layoutManagerState = null;
             }
 
             @Override
@@ -104,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         recipesAdapter = userInterfaceComponent.getRecipesAdapter();
         recipesContainerList.setAdapter(userInterfaceComponent.getRecipesAdapter());
         recipesContainerList.setLayoutManager(userInterfaceComponent.getGridLayoutManager());
-
     }
 
     @Override
@@ -113,5 +105,12 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         intent.putExtra("recipe", recipes.get(position));
 
         startActivity(intent);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable("scroll_position", ((GridLayoutManager)recipesContainerList.getLayoutManager()).onSaveInstanceState());
     }
 }

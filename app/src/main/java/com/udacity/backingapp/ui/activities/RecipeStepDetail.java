@@ -131,6 +131,7 @@ public class RecipeStepDetail extends AppCompatActivity {
                 }
             }
 
+            //if we are in landscape mode, we set a full screen flag and hide the action bar
             int orientation = getResources().getConfiguration().orientation;
             if(orientation == 2){
                 ActionBar actionBar = getSupportActionBar();
@@ -138,8 +139,7 @@ public class RecipeStepDetail extends AppCompatActivity {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             }
 
-            //if (savedInstanceState == null)
-                updateFragment();
+            updateFragment();
         }
         else{
             Timber.e("No step provided");

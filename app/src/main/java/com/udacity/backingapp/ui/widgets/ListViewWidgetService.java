@@ -1,5 +1,6 @@
 package com.udacity.backingapp.ui.widgets;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.widget.RemoteViewsService;
 
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.model.Recipe;
+import com.udacity.backingapp.ui.activities.RecipeDetail;
 
 import java.util.List;
 
@@ -18,8 +20,6 @@ import java.util.List;
 
 public class ListViewWidgetService extends RemoteViewsService {
     private final static String TAG = ListViewWidgetService.class.getSimpleName();
-
-
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -65,20 +65,22 @@ class ListViewWidgetFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public int getCount() {
         if (recipe == null) return 0;
-        if (recipe.getIngredients() == null) return 1;
-        return recipe.getIngredients().size() + 1;
+        if (recipe.getIngredients() == null) return 0;
+        return recipe.getIngredients().size();
     }
 
     @Override
     public RemoteViews getViewAt(int i) {
         RemoteViews rv = null;
-        if (i == 0){
-            rv = new RemoteViews(context.getPackageName(), R.layout.single_line_recipe_name_widget);
-            rv.setTextViewText(R.id.widget_recipe_title, recipe.getName());
-        } else {
-            rv = new RemoteViews(context.getPackageName(), R.layout.single_line_ingredient_widget);
-            rv.setTextViewText(R.id.widget_recipe_ingredient, recipe.getIngredients().get(i - 1).getIngredient());
-        }
+
+        rv = new RemoteViews(context.getPackageName(), R.layout.single_line_ingredient_widget);
+        rv.setTextViewText(R.id.widget_recipe_ingredient, recipe.getIngredients().get(i).getIngredient());
+        rv.setTextViewText(R.id.widget_recipe_quantity, String.valueOf(recipe.getIngredients().get(i).getQuantity()));
+        rv.setTextViewText(R.id.widget_recipe_measure, recipe.getIngredients().get(i).getMeasure());
+
+        Intent openRecipeDetails = new Intent(context, RecipeDetail.class);
+        openRecipeDetails.putExtra("recipe", recipe);
+        rv.setOnClickFillInIntent(R.id.widget_recipe_ingredient, openRecipeDetails);
 
         return rv;
     }

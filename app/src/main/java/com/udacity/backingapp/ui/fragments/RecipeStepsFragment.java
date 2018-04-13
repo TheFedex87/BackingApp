@@ -20,7 +20,6 @@ import com.udacity.backingapp.ui.adapters.RecipesStepsAdapter;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,7 +80,7 @@ public class RecipeStepsFragment extends Fragment  {
 
         RecipesStepsAdapter recipeStepsAdapter = daggerUserInterfaceComponent.getRecipeStepsAdapter();
         recipeStepsAdapter.setHighLightSelected(twoPaneMode);
-        recipeStepsAdapter.setSelectedPosition(selectedStep);
+        recipeStepsAdapter.setSelectedPosition(recipeStepClickListener.getLastSelectedStep());
         recipeStepsContainer.setAdapter(recipeStepsAdapter);
         recipeStepsContainer.setLayoutManager(daggerUserInterfaceComponent.getLinearLayoutManager());
 

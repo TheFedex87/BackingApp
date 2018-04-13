@@ -40,6 +40,7 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
 
     public interface RecipeStepClickListener{
         void onRecipeStepClick(int position);
+        int getLastSelectedStep();
     }
 
     public void setHighLightSelected(boolean highLightSelected) {
@@ -90,7 +91,7 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
             if(position == selectedPosition) {
                 if(highLightSelected) {
                     recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
-                    recipeStepClickListener.onRecipeStepClick(getAdapterPosition());
+                    //recipeStepClickListener.onRecipeStepClick(getAdapterPosition());
                 }
             }
         }

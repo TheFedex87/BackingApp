@@ -38,7 +38,11 @@ import timber.log.Timber;
 /**
  * Created by federico.creti on 23/03/2018.
  */
-
+/*
+* This class is the adapter which manage the recipe list on MainActivity. It take care to retrieve the rercipe images from Internet if none default image is provided
+* with the recipe data. It use the Google API in order to retrieve an image related with recipe name. After it finds one, it download this image, and store it inside the device, and next
+* time tha app will be run, it load the image directly from the device
+* */
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesViewHolder> {
     private static final String IMAGE_DIRECTORY = "RecipeImages";
 
@@ -118,6 +122,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
             recipeClickListener.onRecipeClick(getAdapterPosition());
         }
 
+        //This method bind the image into the "card" where the recipe is showed.
         private void bindImage(final Recipe recipe){
             if(recipe.getImage() != null && !recipe.getImage().isEmpty()){
                 networkComponent.getPicasso().load(recipe.getImage()).fit().into(recipeImage);
@@ -133,6 +138,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
                 if (myImageFile.exists()) {
                     networkComponent.getPicasso().load(myImageFile).fit().into(recipeImage);
                 } else if (!apyKey.isEmpty()) {
+                    //Using the google API and Retrofit, download the JSON which the informations of the image I want download
                     networkComponent.getGoogleImagesApiInterface().googleImages("https://www.googleapis.com/customsearch/v1?&cx=001116670235643120820:acj_gjncnsa&searchType=image&safe=high&imgSize=large&exactTerms=dessert&fileType=jpg",
                             recipeName,
                             apyKey)
@@ -159,7 +165,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
         }
 
 
-        //Method used to load a image into the view using Picasso
+        //Method used to load a image into the view using Picasso. After it loads the image, it persist this image inside the device in order to have it ready next time the app is run
         private void picassoLoader(final List<GoogleImage> imagesList, final String imageUrl, final File directory, final String recipeName){
             networkComponent.getPicasso().load(imageUrl).fit()
                     .into(recipeImage, new com.squareup.picasso.Callback() {
