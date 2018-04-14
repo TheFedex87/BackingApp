@@ -78,10 +78,9 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
                     recipeStepsDescription.add(step.getShortDescription());
                 }
 
-                recipeStepsFragment = userInterfaceComponent.getRecipeStepsFragment();
-
                 //If no saved instance is present (eg: no rotation) I fill the fragment with all recipes data
                 if (savedInstanceState == null) {
+                    recipeStepsFragment = userInterfaceComponent.getRecipeStepsFragment();
                     adaptStepsList(recipeStepsDescription);
                     recipeStepsFragment.setSteps(recipeStepsDescription);
                     recipeStepsFragment.setTwoPaneMode(twoPaneMode);
@@ -90,6 +89,10 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
                     fragmentManager.beginTransaction()
                             .add(R.id.recipe_steps_list_container, recipeStepsFragment, "STEPS_LIST_FRAGMENT")
                             .commit();
+                }
+                else{
+                    //I retrieved the tag but I don't need to fill it with data, since in his constructor I set the method setRetainInstance(true);
+                    recipeStepsFragment = (RecipeStepsFragment) getSupportFragmentManager().findFragmentByTag("STEPS_LIST_FRAGMENT");
                 }
             }
         }

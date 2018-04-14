@@ -7,4 +7,6 @@
 
     <color name="colorRecipesListBackground">#F8BBD0</color>
     <color name="colorRecipeTileBackground">#FFFFFF</color>
+
+    <color name="white">#FFFFFF</color>
 </resources>

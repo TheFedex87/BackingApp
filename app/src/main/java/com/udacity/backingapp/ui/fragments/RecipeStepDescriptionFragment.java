@@ -128,7 +128,7 @@ public class RecipeStepDescriptionFragment extends Fragment {
             ButterKnife.bind(this, rootView);
 
             if(orientation == 2 && enableFullScreenOnLandscape) {
-                ingredientsContainer.setMinimumHeight(height - 20 - (int) (context.getResources().getDimension(R.dimen.steps_navigation_button_height)));
+                ingredientsContainer.setMinimumHeight(height - 30 - (int) (context.getResources().getDimension(R.dimen.steps_navigation_button_height)));
             }
 
             IngredientsAdapter ingredientsAdapter = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getIngredientsAdapter();
@@ -147,7 +147,7 @@ public class RecipeStepDescriptionFragment extends Fragment {
                 } else if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
                     recipeStepImageContainer.setLayoutParams(new LinearLayout.LayoutParams(width, height));
                 } else {
-                    recipeStepDescription.setMinimumHeight(height - 20 - (int) (context.getResources().getDimension(R.dimen.steps_navigation_button_height)));
+                    recipeStepDescription.setMinimumHeight(height - 30 - (int) (context.getResources().getDimension(R.dimen.steps_navigation_button_height)));
                 }
             }
 

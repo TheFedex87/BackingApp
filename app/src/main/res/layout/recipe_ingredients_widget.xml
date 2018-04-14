@@ -3,42 +3,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryLight">
+    android:background="@color/colorPrimaryDark">
 
     <TextView
         android:id="@+id/widget_recipe_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25sp"/>
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:padding="3dp"
+        android:background="@color/white"/>
 
     <ListView
         android:id="@+id/widget_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
-        android:padding="@dimen/widget_margin">
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:padding="3dp"
+        android:background="@color/white">
 
     </ListView>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/white">
 
         <Button
             android:id="@+id/widget_prev_view"
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:layout_height="match_parent"
             android:textSize="20sp"
             android:layout_alignParentLeft="true"
-            android:text="P" />
+            android:background="@drawable/ic_previous_step" />
 
         <Button
             android:id="@+id/widget_next_view"
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:layout_height="match_parent"
             android:textSize="20sp"
             android:layout_alignParentRight="true"
-            android:text="N" />
+            android:background="@drawable/ic_next_step" />
     </RelativeLayout>
 
 

@@ -1,10 +1,13 @@
 package com.udacity.backingapp.ui.adapters;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.udacity.backingapp.R;
@@ -65,8 +68,14 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
     public void onBindViewHolder(RecipeStepsViewHolder holder, int position) {
         holder.bindStep(position);
 
-        if(highLightSelected)
-            holder.recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
+        if(highLightSelected) {
+            if (selectedPosition == position) {
+                holder.stepCircle.setImageResource(R.drawable.ic_circle_accent_24dp);
+            }
+            else
+                holder.stepCircle.setImageResource(R.drawable.ic_circle_primary_light_24dp);
+            //holder.recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
+        }
     }
 
     @Override
@@ -78,6 +87,9 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
     class RecipeStepsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.recipe_step_description) TextView recipeStepDescription;
+        @BindView(R.id.step_circle) ImageView stepCircle;
+        @BindView(R.id.top_line_step) View topLineStep;
+        @BindView(R.id.bottom_line_step) View bottomLineStep;
 
         public RecipeStepsViewHolder(View itemView) {
             super(itemView);
@@ -90,10 +102,21 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
             recipeStepDescription.setText(recepySteps.get(position));
             if(position == selectedPosition) {
                 if(highLightSelected) {
-                    recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
+                    stepCircle.setImageResource(R.drawable.ic_circle_accent_24dp);
+
+                    //recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
                     //recipeStepClickListener.onRecipeStepClick(getAdapterPosition());
                 }
             }
+            if (position == 0)
+                topLineStep.setVisibility(View.INVISIBLE);
+            else
+                topLineStep.setVisibility(View.VISIBLE);
+
+            if(position == recepySteps.size() - 1)
+                bottomLineStep.setVisibility(View.INVISIBLE);
+            else
+                bottomLineStep.setVisibility(View.VISIBLE);
         }
 
         @Override
