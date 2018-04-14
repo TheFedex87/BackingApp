@@ -47,6 +47,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
     private int selectedStep = -1;
 
+    private Boolean loadNewFragmentOnTwoPanelMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
         ButterKnife.bind(this);
 
+        //Retrieve from savedInstanceState the last selected step
         if (savedInstanceState != null && savedInstanceState.containsKey("LAST_SELECTED_STEP")){
             selectedStep = savedInstanceState.getInt("LAST_SELECTED_STEP");
         }
@@ -67,34 +70,42 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
         Bundle bundle = getIntent().getExtras();
 
-        if (bundle != null) {
-            if (bundle.containsKey("recipe")) {
+        if (bundle != null && bundle.containsKey("recipe")) {
 
-                recipe = bundle.getParcelable("recipe");
+            recipe = bundle.getParcelable("recipe");
 
-                List<String> recipeStepsDescription = new ArrayList<>();
+            List<String> recipeStepsDescription = new ArrayList<>();
 
-                for (Step step : recipe.getSteps()) {
-                    recipeStepsDescription.add(step.getShortDescription());
-                }
-
-                //If no saved instance is present (eg: no rotation) I fill the fragment with all recipes data
-                if (savedInstanceState == null) {
-                    recipeStepsFragment = userInterfaceComponent.getRecipeStepsFragment();
-                    adaptStepsList(recipeStepsDescription);
-                    recipeStepsFragment.setSteps(recipeStepsDescription);
-                    recipeStepsFragment.setTwoPaneMode(twoPaneMode);
-
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .add(R.id.recipe_steps_list_container, recipeStepsFragment, "STEPS_LIST_FRAGMENT")
-                            .commit();
-                }
-                else{
-                    //I retrieved the tag but I don't need to fill it with data, since in his constructor I set the method setRetainInstance(true);
-                    recipeStepsFragment = (RecipeStepsFragment) getSupportFragmentManager().findFragmentByTag("STEPS_LIST_FRAGMENT");
-                }
+            for (Step step : recipe.getSteps()) {
+                recipeStepsDescription.add(step.getShortDescription());
             }
+
+            //If no saved instance is present (eg: no rotation) I fill the fragment with all recipes data
+            if (savedInstanceState == null) {
+                recipeStepsFragment = userInterfaceComponent.getRecipeStepsFragment();
+                adaptStepsList(recipeStepsDescription);
+                recipeStepsFragment.setSteps(recipeStepsDescription);
+                recipeStepsFragment.setTwoPaneMode(twoPaneMode);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .add(R.id.recipe_steps_list_container, recipeStepsFragment, "STEPS_LIST_FRAGMENT")
+                        .commit();
+            } else {
+                //I retrieved the fragment from his TAG
+                recipeStepsFragment = (RecipeStepsFragment) getSupportFragmentManager().findFragmentByTag("STEPS_LIST_FRAGMENT");
+                recipeStepsFragment.setSteps(recipeStepsDescription);
+                recipeStepsFragment.setTwoPaneMode(twoPaneMode);
+                recipeStepsFragment.setSelectedStep(selectedStep);
+            }
+
+            loadNewFragmentOnTwoPanelMode = savedInstanceState == null;
+            //If we are on screen rotation, I force the click in the previous clicked step, but advice this method to not load a new fragment,
+            //but to reload it from the fragmentManager with findFragmentByTag
+            if (twoPaneMode && selectedStep != -1){
+                onRecipeStepClick(selectedStep);
+            }
+            loadNewFragmentOnTwoPanelMode = true;
         }
     }
 
@@ -116,8 +127,14 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             //BackingAppApplication.appComponent().inject(this);
-            RecipeStepDescriptionFragment recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepFragment();
+            RecipeStepDescriptionFragment recipeStepDescriptionFragment;
 
+            if(loadNewFragmentOnTwoPanelMode)
+                recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepFragment();
+            else
+                recipeStepDescriptionFragment = (RecipeStepDescriptionFragment) getSupportFragmentManager().findFragmentByTag("STEPS_FRAGMENT");
+
+            //Since we are on tablet even if we rotate the screen no full screen video mode is enabled
             recipeStepDescriptionFragment.setEnableFullScreenOnLandscape(false);
 
             if (position == 0){
@@ -127,14 +144,9 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
             }
 
             fragmentManager.beginTransaction()
-                    .replace(R.id.recipe_step_detail_container, recipeStepDescriptionFragment)
+                    .replace(R.id.recipe_step_detail_container, recipeStepDescriptionFragment, "STEPS_FRAGMENT")
                     .commit();
         }
-    }
-
-    @Override
-    public int getLastSelectedStep() {
-        return selectedStep;
     }
 
     private void adaptStepsList(List<String> listToAdapt){

@@ -24,6 +24,7 @@ import com.udacity.backingapp.dagger.UserInterfaceComponent;
 import com.udacity.backingapp.model.Ingredient;
 import com.udacity.backingapp.model.Step;
 import com.udacity.backingapp.ui.fragments.RecipeStepDescriptionFragment;
+import com.udacity.backingapp.ui.fragments.RecipeStepsFragment;
 
 import java.util.List;
 
@@ -59,7 +60,10 @@ public class RecipeStepDetail extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_step_detail);
         Bundle bundle = getIntent().getExtras();
 
-        recipeStepDescriptionFragment = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepFragment();
+        if (savedInstanceState == null)
+            recipeStepDescriptionFragment = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepFragment();
+        else
+            recipeStepDescriptionFragment = (RecipeStepDescriptionFragment) getSupportFragmentManager().findFragmentByTag("STEPS_FRAGMENT");
 
         final UserInterfaceComponent userInterfaceComponent = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build();
 
@@ -152,7 +156,7 @@ public class RecipeStepDetail extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction
-                .replace(R.id.recipe_step_detail_container, recipeStepDescriptionFragment)
+                .replace(R.id.recipe_step_detail_container, recipeStepDescriptionFragment, "STEPS_FRAGMENT")
                 .commit();
     }
 

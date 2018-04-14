@@ -49,7 +49,7 @@ public class RecipeStepsFragment extends Fragment  {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRetainInstance(true);
+        //setRetainInstance(true);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class RecipeStepsFragment extends Fragment  {
 
         RecipesStepsAdapter recipeStepsAdapter = daggerUserInterfaceComponent.getRecipeStepsAdapter();
         recipeStepsAdapter.setHighLightSelected(twoPaneMode);
-        recipeStepsAdapter.setSelectedPosition(recipeStepClickListener.getLastSelectedStep());
+        recipeStepsAdapter.setSelectedPosition(selectedStep);
         recipeStepsContainer.setAdapter(recipeStepsAdapter);
         recipeStepsContainer.setLayoutManager(daggerUserInterfaceComponent.getLinearLayoutManager());
 
@@ -88,11 +88,11 @@ public class RecipeStepsFragment extends Fragment  {
             recipeStepsAdapter.swapRecipeSteps(stepsList);
         }
 
-        if(twoPaneMode && selectedStep >= 0 && selectedStep < recipeStepsAdapter.getItemCount()){
+        /*if(twoPaneMode && selectedStep >= 0 && selectedStep < recipeStepsAdapter.getItemCount()){
             RecyclerView.ViewHolder viewHolder = recipeStepsContainer.findViewHolderForAdapterPosition(selectedStep);
             if (viewHolder != null)
                 viewHolder.itemView.performClick();
-        }
+        }*/
 
         return rootView;
 

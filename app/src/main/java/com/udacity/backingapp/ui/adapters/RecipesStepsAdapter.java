@@ -43,7 +43,6 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
 
     public interface RecipeStepClickListener{
         void onRecipeStepClick(int position);
-        int getLastSelectedStep();
     }
 
     public void setHighLightSelected(boolean highLightSelected) {
@@ -67,15 +66,6 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
     @Override
     public void onBindViewHolder(RecipeStepsViewHolder holder, int position) {
         holder.bindStep(position);
-
-        if(highLightSelected) {
-            if (selectedPosition == position) {
-                holder.stepCircle.setImageResource(R.drawable.ic_circle_accent_24dp);
-            }
-            else
-                holder.stepCircle.setImageResource(R.drawable.ic_circle_primary_light_24dp);
-            //holder.recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
-        }
     }
 
     @Override
@@ -100,14 +90,16 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
 
         public void bindStep(int position){
             recipeStepDescription.setText(recepySteps.get(position));
-            if(position == selectedPosition) {
-                if(highLightSelected) {
-                    stepCircle.setImageResource(R.drawable.ic_circle_accent_24dp);
 
-                    //recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
-                    //recipeStepClickListener.onRecipeStepClick(getAdapterPosition());
+            if(highLightSelected) {
+                if (selectedPosition == position) {
+                    stepCircle.setImageResource(R.drawable.ic_circle_accent_24dp);
                 }
+                else
+                    stepCircle.setImageResource(R.drawable.ic_circle_primary_light_24dp);
+                //holder.recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
             }
+
             if (position == 0)
                 topLineStep.setVisibility(View.INVISIBLE);
             else

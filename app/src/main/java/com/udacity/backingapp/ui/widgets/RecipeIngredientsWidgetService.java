@@ -35,7 +35,7 @@ public class RecipeIngredientsWidgetService extends IntentService {
             int currentRecipeId = b.getInt("CURRENT_RECIPE_ID", 0);
             int appWidgetId = b.getInt("APP_WIDGET_ID", 0);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this.getApplicationContext());
-            RemoteViews rv = new RemoteViews(getApplicationContext().getPackageName(), R.layout.recipe_ingredients_widget);
+
             RecipeIngredientsWidget.recipeChange(this,
                     appWidgetManager,
                     appWidgetManager.getAppWidgetIds(new ComponentName(this, RecipeIngredientsWidget.class)),

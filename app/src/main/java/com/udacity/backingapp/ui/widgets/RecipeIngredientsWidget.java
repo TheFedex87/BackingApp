@@ -33,8 +33,8 @@ import retrofit2.Response;
  */
 public class RecipeIngredientsWidget extends AppWidgetProvider {
     private static final String TAG = RecipeIngredientsWidget.class.getSimpleName();
+    //Memorize the current recipe for every widget loaded on screen
     private static Map<Integer, Integer> currentRecipes = new HashMap<>();
-    //private List<Recipe> recipes;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, int[] appWidgetIds, List<Recipe> recipes, int currentRecipeId) {
@@ -64,7 +64,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
             nextRecipeId = 0;
         nextBundle.putInt("CURRENT_RECIPE_ID", nextRecipeId);
         navigateRecipeIntent.putExtra("BUNDLE", nextBundle);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, navigateRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getService(context, appWidgetId, navigateRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget_next_view, pendingIntent);
 
         navigateRecipeIntent = new Intent(context, RecipeIngredientsWidgetService.class);
@@ -77,7 +77,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
             prevRecipeId = recipes.size() - 1;
         prevBundle.putInt("CURRENT_RECIPE_ID", prevRecipeId);
         navigateRecipeIntent.putExtra("BUNDLE", prevBundle);
-        pendingIntent = PendingIntent.getService(context, 0, navigateRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getService(context, appWidgetId, navigateRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget_prev_view, pendingIntent);
 
         Intent openRecipeDetails = new Intent(context, RecipeDetail.class);
