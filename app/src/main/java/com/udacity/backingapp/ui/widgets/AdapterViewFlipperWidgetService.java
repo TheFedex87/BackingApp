@@ -97,6 +97,12 @@ class AdapterViewFlipperWidgetFactory implements RemoteViewsService.RemoteViewsF
 //        appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
 //        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_ingredients_list);
 
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        //appWidgetManager.partiallyUpdateAppWidget(appWidgetId, rv);
+        //appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_ingredients_list);
+        appWidgetManager.updateAppWidget(appWidgetId, null);
+        appWidgetManager.updateAppWidget(appWidgetId, rv);
+
 
         return rv;
     }
