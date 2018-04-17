@@ -12,33 +12,13 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.application.BackingAppApplication;
 import com.udacity.backingapp.dagger.ApplicationModule;
@@ -52,11 +32,9 @@ import com.udacity.backingapp.ui.adapters.IngredientsAdapter;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Optional;
 
 /**
  * Created by Federico on 24/03/2018.
@@ -157,6 +135,10 @@ public class RecipeStepDescriptionFragment extends Fragment {
                     (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty() && step.getThumbnailURL().endsWith("mp4"))) {
                 exoPlayerManager.initializePlayer(simpleExoPlayerView);
 
+                if (savedInstanceState != null && savedInstanceState.containsKey("PLAYER_POSITION")){
+                    exoPlayerManager.setCurrentPosition(savedInstanceState.getLong("PLAYER_POSITION"));
+                }
+
                 Uri mediaUri = null;
                 if (step.getVideoURL() != null && !step.getVideoURL().isEmpty())
                     mediaUri = Uri.parse(step.getVideoURL());
@@ -199,6 +181,12 @@ public class RecipeStepDescriptionFragment extends Fragment {
 
     public void setEnableFullScreenOnLandscape(boolean enableFullScreenOnLandscape){
         this.enableFullScreenOnLandscape = enableFullScreenOnLandscape;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("PLAYER_POSITION", exoPlayerManager.getCurrentPosition());
     }
 
     @Override

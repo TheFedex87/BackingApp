@@ -32,13 +32,9 @@ public class RecipeStepsFragment extends Fragment  {
     @BindView(R.id.recipes_steps_container)
     RecyclerView recipeStepsContainer;
 
-    private List<String> stepsList;
-
     private RecipesStepsAdapter.RecipeStepClickListener recipeStepClickListener;
 
-    private boolean twoPaneMode;
-
-    private int selectedStep = -1;
+    private RecipesStepsAdapter recipeStepsAdapter;
 
     @Inject
     Context context;
@@ -78,15 +74,15 @@ public class RecipeStepsFragment extends Fragment  {
                 .userInterfaceModule(new UserInterfaceModule(recipeStepClickListener))
                 .build();
 
-        RecipesStepsAdapter recipeStepsAdapter = daggerUserInterfaceComponent.getRecipeStepsAdapter();
-        recipeStepsAdapter.setHighLightSelected(twoPaneMode);
-        recipeStepsAdapter.setSelectedPosition(selectedStep);
+        recipeStepsAdapter = daggerUserInterfaceComponent.getRecipeStepsAdapter();
+        //recipeStepsAdapter.setHighLightSelected(twoPaneMode);
+        //recipeStepsAdapter.setSelectedPosition(selectedStep);
         recipeStepsContainer.setAdapter(recipeStepsAdapter);
         recipeStepsContainer.setLayoutManager(daggerUserInterfaceComponent.getLinearLayoutManager());
 
-        if(stepsList != null){
+        /*if(stepsList != null){
             recipeStepsAdapter.swapRecipeSteps(stepsList);
-        }
+        }*/
 
         /*if(twoPaneMode && selectedStep >= 0 && selectedStep < recipeStepsAdapter.getItemCount()){
             RecyclerView.ViewHolder viewHolder = recipeStepsContainer.findViewHolderForAdapterPosition(selectedStep);
@@ -99,12 +95,17 @@ public class RecipeStepsFragment extends Fragment  {
     }
 
     public void setSteps(List<String> stepsList){
-        this.stepsList = stepsList;
+        //this.stepsList = stepsList;
+        recipeStepsAdapter.swapRecipeSteps(stepsList);
     }
 
-    public void setTwoPaneMode(boolean twoPaneMode){ this.twoPaneMode = twoPaneMode; }
+    public void setTwoPaneMode(boolean twoPaneMode){
+        //this.twoPaneMode = twoPaneMode;
+        recipeStepsAdapter.setHighLightSelected(twoPaneMode);
+    }
 
     public void setSelectedStep(int selectedStep){
-        this.selectedStep = selectedStep;
+        //this.selectedStep = selectedStep;
+        recipeStepsAdapter.setSelectedPosition(selectedStep);
     }
 }

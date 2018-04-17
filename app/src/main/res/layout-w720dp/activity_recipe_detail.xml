@@ -7,10 +7,11 @@
     tools:context="com.udacity.backingapp.ui.activities.RecipeDetail"
     android:orientation="horizontal">
 
-    <FrameLayout
+    <fragment
         android:id="@+id/recipe_steps_list_container"
         android:layout_width="@dimen/steps_list_frame_width"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:name="com.udacity.backingapp.ui.fragments.RecipeStepsFragment"/>
 
     <View
         android:layout_width="1dp"

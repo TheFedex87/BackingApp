@@ -43,6 +43,8 @@ public class ExoPlayerManager implements ExoPlayer.EventListener {
     private SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer simpleExoPlayer;
 
+    private long startPosition = 0;
+
     @Inject
     public ExoPlayerManager(Context context){
         this.context = context;
@@ -77,6 +79,7 @@ public class ExoPlayerManager implements ExoPlayer.EventListener {
                 new DefaultExtractorsFactory(), null, null);
 
         simpleExoPlayer.prepare(mediaSource);
+        simpleExoPlayer.seekTo(startPosition);
         simpleExoPlayer.setPlayWhenReady(true);
     }
 
@@ -87,6 +90,12 @@ public class ExoPlayerManager implements ExoPlayer.EventListener {
             simpleExoPlayer = null;
         }
     }
+
+    public long getCurrentPosition(){
+        return simpleExoPlayer.getCurrentPosition();
+    }
+
+    public void setCurrentPosition(long startPosition) { this.startPosition = startPosition; }
 
 
     @Override

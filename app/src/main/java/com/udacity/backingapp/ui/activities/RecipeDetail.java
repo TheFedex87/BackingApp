@@ -82,18 +82,18 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
             //If no saved instance is present (eg: no rotation) I fill the fragment with all recipes data
             if (savedInstanceState == null) {
-                recipeStepsFragment = userInterfaceComponent.getRecipeStepsFragment();
+                recipeStepsFragment = (RecipeStepsFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_steps_list_container);//userInterfaceComponent.getRecipeStepsFragment();
                 adaptStepsList(recipeStepsDescription);
                 recipeStepsFragment.setSteps(recipeStepsDescription);
                 recipeStepsFragment.setTwoPaneMode(twoPaneMode);
 
-                FragmentManager fragmentManager = getSupportFragmentManager();
+                /*FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .add(R.id.recipe_steps_list_container, recipeStepsFragment, "STEPS_LIST_FRAGMENT")
-                        .commit();
+                        .commit();*/
             } else {
-                //I retrieved the fragment from his TAG
-                recipeStepsFragment = (RecipeStepsFragment) getSupportFragmentManager().findFragmentByTag("STEPS_LIST_FRAGMENT");
+                //I retrieved the fragment from his ID
+                recipeStepsFragment = (RecipeStepsFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_steps_list_container);
                 recipeStepsFragment.setSteps(recipeStepsDescription);
                 recipeStepsFragment.setTwoPaneMode(twoPaneMode);
                 recipeStepsFragment.setSelectedStep(selectedStep);

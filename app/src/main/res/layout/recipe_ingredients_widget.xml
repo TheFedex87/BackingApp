@@ -2,8 +2,9 @@
     android:id="@+id/widget_ingredient_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="5dp"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/black_transparent">
 
     <TextView
         android:id="@+id/widget_recipe_name"
@@ -15,7 +16,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
         android:padding="3dp"
-        android:background="@color/white"/>
+        android:textColor="@color/colorPrimaryDark"/>
 
     <ListView
         android:id="@+id/widget_list_view"
@@ -25,7 +26,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:padding="3dp"
-        android:background="@color/white">
+        android:divider="@drawable/list_divider_widget"
+        android:dividerHeight="1px">
 
     </ListView>
 
@@ -34,8 +36,7 @@
         android:layout_height="40dp"
         android:layout_marginLeft="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@color/white">
+        android:layout_marginRight="5dp">
 
         <Button
             android:id="@+id/widget_prev_view"
@@ -43,7 +44,7 @@
             android:layout_height="match_parent"
             android:textSize="20sp"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/ic_previous_step" />
+            android:background="@drawable/ic_prev_step_white" />
 
         <Button
             android:id="@+id/widget_next_view"
@@ -51,7 +52,7 @@
             android:layout_height="match_parent"
             android:textSize="20sp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_next_step" />
+            android:background="@drawable/ic_next_step_white" />
     </RelativeLayout>
 
 
