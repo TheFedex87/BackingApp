@@ -57,7 +57,7 @@ public class Recipe implements Parcelable {
     }
 
     public void setSteps(List<Step> steps) {
-        steps = steps;
+        this.steps = steps;
     }
 
     public String getImage() {
