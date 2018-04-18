@@ -2,6 +2,9 @@ package com.udacity.backingapp;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingRegistry;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.BoundedMatcher;
@@ -16,6 +19,7 @@ import com.udacity.backingapp.ui.activities.MainActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +46,15 @@ public class MainActivityScreenTest {
     private final String RECIPE_NAME = "Yellow Cake";
     private final int RECYCLER_POSITION = 2;
 
+    private IdlingResource idlingResource;
+
     @Rule public ActivityTestRule<MainActivity> activityActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
+
+    @Before
+    public void registerHidlingResource() {
+        idlingResource = activityActivityTestRule.getActivity().getIdlingResource();
+        IdlingRegistry.getInstance().register(idlingResource);
+    }
 
     @Test
     public void clickGridViewItemShouldOpensCorrespondentRecipe(){

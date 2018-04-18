@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
 
         initUi();
 
-        getIdlingResource();
+        //getIdlingResource();
     }
 
     @VisibleForTesting
