@@ -3,6 +3,10 @@ package com.udacity.backingapp.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +22,7 @@ import com.udacity.backingapp.dagger.UserInterfaceComponent;
 import com.udacity.backingapp.dagger.UserInterfaceModule;
 import com.udacity.backingapp.model.Recipe;
 import com.udacity.backingapp.model.googleimagesearchmodels.GoogleImageRoot;
+import com.udacity.backingapp.ui.activities.IdlingResource.SimpleIdlingResource;
 import com.udacity.backingapp.ui.adapters.RecipesAdapter;
 
 import java.util.ArrayList;
@@ -47,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
 
     private Parcelable layoutManagerState;
 
+    @Nullable
+    private SimpleIdlingResource simpleIdlingResource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +76,28 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
 
         initUi();
 
+        getIdlingResource();
+    }
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource(){
+        if (simpleIdlingResource == null){
+            simpleIdlingResource = new SimpleIdlingResource();
+        }
+
+        return simpleIdlingResource;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (simpleIdlingResource != null) {
+            simpleIdlingResource.setIdleState(false);
+        }
+
+
         //Retrieve the list of recipes from web using Retrofit
         networkComponent.getRecepiesApiInterface().recipes().enqueue(new Callback<List<Recipe>>() {
             @Override
@@ -77,6 +107,10 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
                 if (layoutManagerState != null)
                     recipesContainerList.getLayoutManager().onRestoreInstanceState(layoutManagerState);
                 layoutManagerState = null;
+
+                if (simpleIdlingResource != null){
+                    simpleIdlingResource.setIdleState(true);
+                }
             }
 
             @Override
@@ -84,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
 
             }
         });
-
     }
 
     private void initUi(){

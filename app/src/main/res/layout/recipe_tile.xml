@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:id="@+id/recepie_container"
+            android:id="@+id/recipe_container"
             android:layout_width="match_parent"
             android:layout_height="@dimen/recipe_card_height"
             android:layout_marginLeft="10dp"
