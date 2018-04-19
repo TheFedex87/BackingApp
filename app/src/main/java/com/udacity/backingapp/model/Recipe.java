@@ -49,7 +49,7 @@ public class Recipe implements Parcelable {
     }
 
     public void setIngredients(List<Ingredient> ingredients) {
-        ingredients = ingredients;
+        this.ingredients = ingredients;
     }
 
     public List<Step> getSteps() {

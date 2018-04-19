@@ -58,7 +58,6 @@ public class MainActivityScreenTest {
 
     @Test
     public void clickGridViewItemShouldOpensCorrespondentRecipe(){
-        //onView(withId(R.id.recipes_list_container)).check(matches(atPosition(0, isDisplayed())));
 
         onView(withId(R.id.recipes_list_container)).perform(RecyclerViewActions.scrollToPosition(RECYCLER_POSITION))
                 .check(matches(atPosition(RECYCLER_POSITION, hasDescendant(withText(RECIPE_NAME)))));
@@ -68,7 +67,8 @@ public class MainActivityScreenTest {
         onView(allOf(isDescendantOfA(withResourceName("action_bar_container")), withText(RECIPE_NAME))).check(matches(isDisplayed()));
     }
 
-    public Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
+    //This is a custom matcher which look in a specific position of a recycler view: https://stackoverflow.com/a/34795431/1857023
+    private Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
         checkNotNull(itemMatcher);
         return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
             @Override
