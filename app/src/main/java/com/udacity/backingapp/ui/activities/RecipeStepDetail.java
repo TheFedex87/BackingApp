@@ -73,7 +73,9 @@ public class RecipeStepDetail extends AppCompatActivity {
         if (bundle.containsKey("steps") && bundle.containsKey("ingredients")){
             ButterKnife.bind(this);
 
-
+            if (bundle.containsKey("recipe_name")){
+                getSupportActionBar().setTitle(bundle.getString("recipe_name"));
+            }
 
             previusStep.setOnClickListener(new View.OnClickListener() {
                 @Override

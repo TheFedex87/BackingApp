@@ -117,6 +117,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
         if (!twoPaneMode) {
             Intent intent = new Intent(this, RecipeStepDetail.class);
 
+            intent.putExtra("recipe_name", recipe.getName());
             intent.putParcelableArrayListExtra("ingredients", new ArrayList(recipe.getIngredients()));
             intent.putParcelableArrayListExtra("steps", new ArrayList(recipe.getSteps()));
             intent.putExtra("stepIndex", position);
