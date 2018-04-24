@@ -1,7 +1,6 @@
 package com.udacity.backingapp.ui.activities;
 
 import android.content.Context;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -11,10 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.support.v4.app.FragmentManager;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.udacity.backingapp.R;
 import com.udacity.backingapp.application.BackingAppApplication;
@@ -24,7 +20,6 @@ import com.udacity.backingapp.dagger.UserInterfaceComponent;
 import com.udacity.backingapp.model.Ingredient;
 import com.udacity.backingapp.model.Step;
 import com.udacity.backingapp.ui.fragments.RecipeStepDescriptionFragment;
-import com.udacity.backingapp.ui.fragments.RecipeStepsFragment;
 
 import java.util.List;
 
@@ -61,7 +56,7 @@ public class RecipeStepDetail extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         if (savedInstanceState == null)
-            recipeStepDescriptionFragment = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepFragment();
+            recipeStepDescriptionFragment = DaggerUserInterfaceComponent.builder().applicationModule(new ApplicationModule(context)).build().getRecipeStepDescriptionFragment();
         else
             recipeStepDescriptionFragment = (RecipeStepDescriptionFragment) getSupportFragmentManager().findFragmentByTag("STEPS_FRAGMENT");
 
@@ -77,12 +72,11 @@ public class RecipeStepDetail extends AppCompatActivity {
                 getSupportActionBar().setTitle(bundle.getString("recipe_name"));
             }
 
+            //This button navigate to previous step
             previusStep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //In order to get a new reference of RecipeStepDescriptionFragment (which I need to replace the fragment) I have to reinject this class
-                    //BackingAppApplication.appComponent().inject(recipeStepDetail);
-                    recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepFragment();
+                    recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepDescriptionFragment();
                     stepIndex--;
                     nextStep.setEnabled(true);
                     if (stepIndex == 0){
@@ -98,12 +92,11 @@ public class RecipeStepDetail extends AppCompatActivity {
                 }
             });
 
+            //This button navigate to next step
             nextStep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //In order to get a new reference of RecipeStepDescriptionFragment (which I need to replace the fragment) I have to reinject this class
-                    //BackingAppApplication.appComponent().inject(recipeStepDetail);
-                    recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepFragment();
+                    recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepDescriptionFragment();
                     stepIndex++;
                     previusStep.setEnabled(true);
                     if (stepIndex == stepsList.size()) {

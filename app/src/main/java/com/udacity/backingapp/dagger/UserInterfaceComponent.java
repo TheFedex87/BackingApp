@@ -26,6 +26,5 @@ public interface UserInterfaceComponent {
     GridLayoutManager getGridLayoutManager();
     LinearLayoutManager getLinearLayoutManager();
 
-    RecipeStepsFragment getRecipeStepsFragment();
-    RecipeStepDescriptionFragment getRecipeStepFragment();
+    RecipeStepDescriptionFragment getRecipeStepDescriptionFragment();
 }

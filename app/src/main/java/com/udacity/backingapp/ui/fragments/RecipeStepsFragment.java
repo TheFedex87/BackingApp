@@ -75,37 +75,22 @@ public class RecipeStepsFragment extends Fragment  {
                 .build();
 
         recipeStepsAdapter = daggerUserInterfaceComponent.getRecipeStepsAdapter();
-        //recipeStepsAdapter.setHighLightSelected(twoPaneMode);
-        //recipeStepsAdapter.setSelectedPosition(selectedStep);
         recipeStepsContainer.setAdapter(recipeStepsAdapter);
         recipeStepsContainer.setLayoutManager(daggerUserInterfaceComponent.getLinearLayoutManager());
-
-        /*if(stepsList != null){
-            recipeStepsAdapter.swapRecipeSteps(stepsList);
-        }*/
-
-        /*if(twoPaneMode && selectedStep >= 0 && selectedStep < recipeStepsAdapter.getItemCount()){
-            RecyclerView.ViewHolder viewHolder = recipeStepsContainer.findViewHolderForAdapterPosition(selectedStep);
-            if (viewHolder != null)
-                viewHolder.itemView.performClick();
-        }*/
 
         return rootView;
 
     }
 
     public void setSteps(List<String> stepsList){
-        //this.stepsList = stepsList;
         recipeStepsAdapter.swapRecipeSteps(stepsList);
     }
 
     public void setTwoPaneMode(boolean twoPaneMode){
-        //this.twoPaneMode = twoPaneMode;
         recipeStepsAdapter.setHighLightSelected(twoPaneMode);
     }
 
     public void setSelectedStep(int selectedStep){
-        //this.selectedStep = selectedStep;
         recipeStepsAdapter.setSelectedPosition(selectedStep);
     }
 }

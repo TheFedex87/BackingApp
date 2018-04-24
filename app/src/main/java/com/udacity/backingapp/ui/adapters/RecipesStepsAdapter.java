@@ -95,9 +95,10 @@ public class RecipesStepsAdapter extends RecyclerView.Adapter<RecipesStepsAdapte
                 if (selectedPosition == position) {
                     stepCircle.setImageResource(R.drawable.ic_circle_accent_24dp);
                 }
-                else
+                else {
                     stepCircle.setImageResource(R.drawable.ic_circle_primary_light_24dp);
-                //holder.recipeStepDescription.setBackgroundColor(selectedPosition == position ? context.getResources().getColor(R.color.colorAccent) : context.getResources().getColor(R.color.colorPrimaryLight));
+                }
+
             }
 
             if (position == 0)

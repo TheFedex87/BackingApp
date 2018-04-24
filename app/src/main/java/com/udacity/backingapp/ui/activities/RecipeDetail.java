@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.FrameLayout;
@@ -83,21 +82,12 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
             }
 
             //If no saved instance is present (eg: no rotation) I fill the fragment with all recipes data
+            recipeStepsFragment = (RecipeStepsFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_steps_list_container);
+            recipeStepsFragment.setSteps(recipeStepsDescription);
+            recipeStepsFragment.setTwoPaneMode(twoPaneMode);
             if (savedInstanceState == null) {
-                recipeStepsFragment = (RecipeStepsFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_steps_list_container);//userInterfaceComponent.getRecipeStepsFragment();
                 adaptStepsList(recipeStepsDescription);
-                recipeStepsFragment.setSteps(recipeStepsDescription);
-                recipeStepsFragment.setTwoPaneMode(twoPaneMode);
-
-                /*FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .add(R.id.recipe_steps_list_container, recipeStepsFragment, "STEPS_LIST_FRAGMENT")
-                        .commit();*/
             } else {
-                //I retrieved the fragment from his ID
-                recipeStepsFragment = (RecipeStepsFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_steps_list_container);
-                recipeStepsFragment.setSteps(recipeStepsDescription);
-                recipeStepsFragment.setTwoPaneMode(twoPaneMode);
                 recipeStepsFragment.setSelectedStep(selectedStep);
             }
 
@@ -113,7 +103,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
 
     @Override
     public void onRecipeStepClick(int position) {
-        //If we are not in a two panel layout a new activity with recipe step detail si opened
+        //If we are not in a two panel layout a new activity with recipe step detail is opened
         if (!twoPaneMode) {
             Intent intent = new Intent(this, RecipeStepDetail.class);
 
@@ -125,21 +115,21 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
             startActivity(intent);
         } else {
             //If we are in a two panel layout the right side Fragment with recipe step detail is loaded
-            //recipeStepsFragment.setSelectedStep(position);
             selectedStep = position;
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            //BackingAppApplication.appComponent().inject(this);
+
             RecipeStepDescriptionFragment recipeStepDescriptionFragment;
 
             if(loadNewFragmentOnTwoPanelMode)
-                recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepFragment();
+                recipeStepDescriptionFragment = userInterfaceComponent.getRecipeStepDescriptionFragment();
             else
                 recipeStepDescriptionFragment = (RecipeStepDescriptionFragment) getSupportFragmentManager().findFragmentByTag("STEPS_FRAGMENT");
 
             //Since we are on tablet even if we rotate the screen no full screen video mode is enabled
             recipeStepDescriptionFragment.setEnableFullScreenOnLandscape(false);
 
+            //If the first element of recycler view is selected the ingredients are loaded otherwise a step detail
             if (position == 0){
                 recipeStepDescriptionFragment.setIngredients(recipe.getIngredients());
             } else {
@@ -153,6 +143,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
     }
 
     private void adaptStepsList(List<String> listToAdapt){
+        //Add the recipe ingredient description at the top of the list
         listToAdapt.add(0, context.getString(R.string.recepy_ingredients));
     }
 
@@ -160,6 +151,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipesStepsAdapt
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        //Save the last selected step on screen rotation, this is used on tablet layout which is divided in two panels
         outState.putInt("LAST_SELECTED_STEP", selectedStep);
     }
 }

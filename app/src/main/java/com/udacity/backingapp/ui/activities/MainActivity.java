@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         getIdlingResource();
     }
 
+
     @VisibleForTesting
     @NonNull
     public IdlingResource getIdlingResource(){
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
 
     @Override
     public void onRecipeClick(int position) {
+        //Create a new intent inserting the recipe and launch the details activity
         Intent intent = new Intent(this, RecipeDetail.class);
         intent.putExtra("recipe", recipes.get(position));
 
@@ -144,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        //Save the recyclerview position on screen rotation
         outState.putParcelable("scroll_position", ((GridLayoutManager)recipesContainerList.getLayoutManager()).onSaveInstanceState());
     }
 }

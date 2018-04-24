@@ -92,6 +92,7 @@ public class ExoPlayerManager implements ExoPlayer.EventListener {
     }
 
     public long getCurrentPosition(){
+        if (simpleExoPlayer == null) return 0;
         return simpleExoPlayer.getCurrentPosition();
     }
 

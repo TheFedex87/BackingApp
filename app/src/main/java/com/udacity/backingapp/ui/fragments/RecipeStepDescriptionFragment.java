@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.udacity.backingapp.R;
@@ -35,6 +36,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by Federico on 24/03/2018.
@@ -83,13 +85,12 @@ public class RecipeStepDescriptionFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //BackingAppApplication.appComponent().inject(this);
-
         View rootView = null;
 
         int width = 0;
         int height = 0;
         int orientation = 0;
+        //If we are on a phone (or a small screen device) I save the information of screen orientation, width and height in order to resize the ExoPlayerView at full screen in landscape mode
         if (enableFullScreenOnLandscape) {
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
@@ -148,7 +149,8 @@ public class RecipeStepDescriptionFragment extends Fragment {
                 try {
                     exoPlayerManager.setMediaAndPlay(mediaUri, getContext());
                 } catch (Exception ex) {
-                    //TODO: manage error
+                    Timber.e("Error loading media: " + ex.getMessage());
+                    Toast.makeText(context, "Error playing media", Toast.LENGTH_LONG).show();
                 }
             } else{
                 simpleExoPlayerView.setVisibility(View.GONE);
@@ -186,7 +188,8 @@ public class RecipeStepDescriptionFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong("PLAYER_POSITION", exoPlayerManager.getCurrentPosition());
+        if (exoPlayerManager != null)
+            outState.putLong("PLAYER_POSITION", exoPlayerManager.getCurrentPosition());
     }
 
     @Override
