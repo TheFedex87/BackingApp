@@ -1,0 +1,1 @@
+On this project I used Google Api and Custom Search Engine in order to search and load the images of recipes. I do not intend to inflict copyright of the images. The purpose of this project is merely educational and has no commercial purpose. I'm looking for the images in the base of Google images.
