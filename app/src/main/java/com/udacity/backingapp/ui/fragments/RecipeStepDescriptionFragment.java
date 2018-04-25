@@ -47,6 +47,9 @@ public class RecipeStepDescriptionFragment extends Fragment {
     private Step step;
     private boolean enableFullScreenOnLandscape = false;
 
+    private long playerPosition;
+    private boolean playerPlayWhenReady;
+
     @Nullable @BindView(R.id.step_container)
     ScrollView stepContainer;
 
@@ -132,22 +135,23 @@ public class RecipeStepDescriptionFragment extends Fragment {
 
             recipeStepDescription.setText(step.getDescription());
 
-            if ((step.getVideoURL() != null && !step.getVideoURL().isEmpty()) ||
-                    (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty() && step.getThumbnailURL().endsWith("mp4"))) {
+            if ((step.getVideoURL() != null && !step.getVideoURL().isEmpty())) {
                 exoPlayerManager.initializePlayer(simpleExoPlayerView);
 
-                if (savedInstanceState != null && savedInstanceState.containsKey("PLAYER_POSITION")){
-                    exoPlayerManager.setCurrentPosition(savedInstanceState.getLong("PLAYER_POSITION"));
+                boolean playWhenReady = true;
+                if (savedInstanceState != null) {
+                    if (savedInstanceState.containsKey("PLAYER_POSITION")) {
+                        exoPlayerManager.setCurrentPosition(savedInstanceState.getLong("PLAYER_POSITION"));
+                    }
+                    if (savedInstanceState.containsKey("PLAYER_PLAY_WHEN_READY")){
+                        playWhenReady = savedInstanceState.getBoolean("PLAYER_PLAY_WHEN_READY");
+                    }
                 }
 
-                Uri mediaUri = null;
-                if (step.getVideoURL() != null && !step.getVideoURL().isEmpty())
-                    mediaUri = Uri.parse(step.getVideoURL());
-                else
-                    mediaUri = Uri.parse(step.getThumbnailURL());
+                Uri mediaUri = Uri.parse(step.getVideoURL());
 
                 try {
-                    exoPlayerManager.setMediaAndPlay(mediaUri, getContext());
+                    exoPlayerManager.setMediaAndState(mediaUri, getContext(), playWhenReady);
                 } catch (Exception ex) {
                     Timber.e("Error loading media: " + ex.getMessage());
                     Toast.makeText(context, "Error playing media", Toast.LENGTH_LONG).show();
@@ -188,14 +192,19 @@ public class RecipeStepDescriptionFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (exoPlayerManager != null)
-            outState.putLong("PLAYER_POSITION", exoPlayerManager.getCurrentPosition());
+        if (exoPlayerManager != null) {
+            outState.putLong("PLAYER_POSITION", playerPosition);
+            outState.putBoolean("PLAYER_PLAY_WHEN_READY", playerPlayWhenReady);
+        }
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (exoPlayerManager != null)
+    public void onPause() {
+        super.onPause();
+        if (exoPlayerManager != null) {
+            playerPlayWhenReady = exoPlayerManager.getPlayWhenReady();
+            playerPosition = exoPlayerManager.getCurrentPosition();
             exoPlayerManager.ReleasePlayer();
+        }
     }
 }

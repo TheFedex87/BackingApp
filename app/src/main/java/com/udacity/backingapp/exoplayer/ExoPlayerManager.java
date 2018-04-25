@@ -68,7 +68,7 @@ public class ExoPlayerManager implements ExoPlayer.EventListener {
         }
     }
 
-    public void setMediaAndPlay(Uri uri, Context context) throws Exception{
+    public void setMediaAndState(Uri uri, Context context, boolean playWhenReady) throws Exception{
         if (simpleExoPlayer == null) {
             throw new Exception("ExoPlayer must be initialized before it's use. Use initializePlayer(simpleExoPlayerView)");
         }
@@ -80,7 +80,7 @@ public class ExoPlayerManager implements ExoPlayer.EventListener {
 
         simpleExoPlayer.prepare(mediaSource);
         simpleExoPlayer.seekTo(startPosition);
-        simpleExoPlayer.setPlayWhenReady(true);
+        simpleExoPlayer.setPlayWhenReady(playWhenReady);
     }
 
     public void ReleasePlayer(){
@@ -94,6 +94,11 @@ public class ExoPlayerManager implements ExoPlayer.EventListener {
     public long getCurrentPosition(){
         if (simpleExoPlayer == null) return 0;
         return simpleExoPlayer.getCurrentPosition();
+    }
+
+    public boolean getPlayWhenReady(){
+        if (simpleExoPlayer == null) return false;
+        return simpleExoPlayer.getPlayWhenReady();
     }
 
     public void setCurrentPosition(long startPosition) { this.startPosition = startPosition; }

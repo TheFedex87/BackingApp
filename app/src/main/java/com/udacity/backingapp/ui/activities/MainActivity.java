@@ -148,5 +148,6 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
 
         //Save the recyclerview position on screen rotation
         outState.putParcelable("scroll_position", ((GridLayoutManager)recipesContainerList.getLayoutManager()).onSaveInstanceState());
+
     }
 }
